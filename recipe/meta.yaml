@@ -1,4 +1,4 @@
-{% set version = "4.4_20160413" %}
+{% set version = "4.4_20160526" %}
 {% set flat_version=version.replace(".", "") %}
 
 package:
@@ -7,11 +7,11 @@ package:
 
 source:
   fn: tbb{{ flat_version }}oss_src.tgz
-  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src.tgz
-  sha1: d4cee5e4ca75cab5181834877738619c56afeb71
+  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src_0.tgz
+  sha1: d6737ce2aa16e1d6729bb15ae067b139d0842533 
 
 build:
-  number: 1
+  number: 0
   features:
     - vc9    # [win and py27]
     - vc10   # [win and py34]
