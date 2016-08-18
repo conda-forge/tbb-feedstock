@@ -11,7 +11,7 @@ source:
   sha1: d6737ce2aa16e1d6729bb15ae067b139d0842533 
 
 build:
-  number: 0
+  number: 1
   features:
     - vc9    # [win and py27]
     - vc10   # [win and py34]
@@ -19,6 +19,7 @@ build:
 
 requirements:
   build:
+    - toolchain
     - python  # [win]
     - cmake   # [win]
 
@@ -41,3 +42,4 @@ about:
 extra:
   recipe-maintainers:
     - jschueller
+
