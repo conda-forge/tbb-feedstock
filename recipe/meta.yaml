@@ -1,4 +1,4 @@
-{% set version = "4.4_20160526" %}
+{% set version = "2017_20160722" %}
 {% set flat_version=version.replace(".", "") %}
 
 package:
@@ -7,11 +7,11 @@ package:
 
 source:
   fn: tbb{{ flat_version }}oss_src.tgz
-  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src_0.tgz
-  sha1: d6737ce2aa16e1d6729bb15ae067b139d0842533 
+  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src.tgz
+  sha256: fd5fb4c4e0bf6025eb45d12bd7a474821c8e1b45dbf39fe50a256aa4c7ae190d
 
 build:
-  number: 1
+  number: 0
   features:
     - vc9    # [win and py27]
     - vc10   # [win and py34]
@@ -36,7 +36,8 @@ test:
 
 about:
   home: http://www.threadingbuildingblocks.org
-  license: GPL v2 (with runtime exception)
+  license: Apache 2.0
+  license_file: LICENSE
   summary: High level abstract threading library
 
 extra:
