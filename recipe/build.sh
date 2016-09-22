@@ -13,4 +13,3 @@ cp -r ./include/tbb ${PREFIX}/include
 # simple test instead of "make test" to avoid timeout
 ${CXX} ${RECIPE_DIR}/tbb_example.c -I${PREFIX}/include -L${PREFIX}/lib -ltbb -o tbb_example
 DYLD_LIBRARY_PATH=${PREFIX}/lib ./tbb_example
-

@@ -11,11 +11,9 @@ cd build_win
 
 set CMAKE_CONFIG="Release"
 
-
 cmake -LAH -G"NMake Makefiles"                               ^
     -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%" ..
+if errorlevel 1 exit 1
 
-cmake --build . --config %CMAKE_CONFIG% --target ALL_BUILD
 cmake --build . --config %CMAKE_CONFIG% --target INSTALL
-
 if errorlevel 1 exit 1
