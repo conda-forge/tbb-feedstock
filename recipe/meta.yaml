@@ -1,4 +1,4 @@
-{% set version = "2017_20160722" %}
+{% set version = "2017_20160916" %}
 {% set flat_version=version.replace(".", "") %}
 
 package:
@@ -8,7 +8,7 @@ package:
 source:
   fn: tbb{{ flat_version }}oss_src.tgz
   url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src.tgz
-  sha256: fd5fb4c4e0bf6025eb45d12bd7a474821c8e1b45dbf39fe50a256aa4c7ae190d
+  sha256: 600c67f1c5a730e411b3bf2e792cfe5808f40c4f0354a9b613827fff0ef27fc4
 
 build:
   number: 0
