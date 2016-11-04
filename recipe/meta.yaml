@@ -1,27 +1,26 @@
-{% set version = "2017_20160916" %}
-{% set flat_version=version.replace(".", "") %}
+{% set version = "2017_20161004" %}
 
 package:
   name: tbb
   version: {{ version }}
 
 source:
-  fn: tbb{{ flat_version }}oss_src.tgz
-  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ flat_version }}oss_src.tgz
-  sha256: 600c67f1c5a730e411b3bf2e792cfe5808f40c4f0354a9b613827fff0ef27fc4
+  fn: tbb{{ version }}oss_src.tgz
+  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ version }}oss_src.tgz
+  sha256: f4ba7a7ed1bcb6c05d47e73624ca2e4580104bc0d3e0a3ccc7b67fa324760cb1
 
 build:
   number: 0
   features:
-    - vc9    # [win and py27]
-    - vc10   # [win and py34]
-    - vc14   # [win and py35]
+    - vc9  # [win and py27]
+    - vc10  # [win and py34]
+    - vc14  # [win and py35]
 
 requirements:
   build:
     - toolchain
     - python  # [win]
-    - cmake   # [win]
+    - cmake  # [win]
 
 test:
   requires:
