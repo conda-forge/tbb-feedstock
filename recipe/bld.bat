@@ -1,4 +1,3 @@
-rem  @echo off
 
 @rem See https://github.com/wjakob/tbb
 cp "%RECIPE_DIR%\CMakeLists.txt" .
@@ -6,8 +5,7 @@ if errorlevel 1 exit 1
 cp "%RECIPE_DIR%\version_string.ver.in" build
 if errorlevel 1 exit 1
 
-mkdir build_win
-cd build_win
+mkdir buildw && cd buildw
 
 set CMAKE_CONFIG="Release"
 

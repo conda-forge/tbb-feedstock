@@ -1,4 +1,4 @@
-{% set version = "2017_20161004" %}
+{% set version = "2017_20161128" %}
 
 package:
   name: tbb
@@ -7,14 +7,14 @@ package:
 source:
   fn: tbb{{ version }}oss_src.tgz
   url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ version }}oss_src.tgz
-  sha256: f4ba7a7ed1bcb6c05d47e73624ca2e4580104bc0d3e0a3ccc7b67fa324760cb1
+  sha256: c009166233c8ea0e34530a1c5f870b79314316d19e6876b37a7e7c854080a540
 
 build:
   number: 0
   features:
     - vc9  # [win and py27]
     - vc10  # [win and py34]
-    - vc14  # [win and py35]
+    - vc14  # [win and py >= 35]
 
 requirements:
   build:
@@ -42,4 +42,3 @@ about:
 extra:
   recipe-maintainers:
     - jschueller
-
