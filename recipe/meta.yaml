@@ -1,4 +1,4 @@
-{% set version = "2017_20161128" %}
+{% set version = "2017_20170226" %}
 
 package:
   name: tbb
@@ -6,15 +6,16 @@ package:
 
 source:
   fn: tbb{{ version }}oss_src.tgz
-  url: https://www.threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb{{ version }}oss_src.tgz
-  sha256: c009166233c8ea0e34530a1c5f870b79314316d19e6876b37a7e7c854080a540
+  url: https://github.com/01org/tbb/archive/2017_U5.tar.gz
+  sha256: 780baf0ad520f23b54dd20dc97bf5aae4bc562019e0a70f53bfc4c1afec6e545
 
 build:
   number: 0
   features:
     - vc9  # [win and py27]
     - vc10  # [win and py34]
-    - vc14  # [win and py >= 35]
+    - vc14  # [win and py>=35]
+  skip: true  # [win and py36]
 
 requirements:
   build:
@@ -24,14 +25,15 @@ requirements:
 
 test:
   requires:
-    - python 2.7.*  # [win and py27]
-    - python 3.4.*  # [win and py34]
-    - python 3.5.*  # [win and py35]
+    - python {{ os.environ.get('PY_VER', '') + '*' }}  # [win]
 
   commands:
     - test -f ${PREFIX}/include/tbb/tbb.h  # [unix]
     - test -f ${PREFIX}/lib/libtbb.so  # [linux]
     - test -f ${PREFIX}/lib/libtbb.dylib  # [osx]
+    - if not exist %PREFIX%\\Library\\include\\tbb\\tbb.h exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\tbb_debug.lib exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\bin\\tbb_debug.dll exit 1  # [win]
 
 about:
   home: http://www.threadingbuildingblocks.org
