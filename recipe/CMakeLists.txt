@@ -1,10 +1,14 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.12 FATAL_ERROR)
 project (tbb CXX)
 
 include (CheckCXXCompilerFlag)
 
 if(POLICY CMP0058)
   cmake_policy(SET CMP0058 NEW)
+endif()
+
+if (POLICY CMP0023)
+  cmake_policy(SET CMP0023 OLD)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -57,6 +61,12 @@ if (APPLE)
   set(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
 endif()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # Always use libc++ on Clang
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -D_LIBCPP_VERSION")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
+endif()
+
 if (UNIX)
   add_definitions (-DUSE_PTHREAD)
 
@@ -83,7 +93,7 @@ elseif(WIN32)
     if (SUPPORTS_VOLATILE_FLAG)
       set(CMAKE_CXX_FLAGS "/volatile:iso ${CMAKE_CXX_FLAGS}")
     endif ()
-    set(CMAKE_CXX_FLAGS "/wd4267 /wd4800 /wd4146 /wd4244 /wd4018 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "/wd4267 /wd4800 /wd4146 /wd4244 /wd4577 /wd4018 ${CMAKE_CXX_FLAGS}")
 
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
       list(APPEND tbb_src src/tbb/intel64-masm/atomic_support.asm
@@ -128,8 +138,11 @@ endif()
 
 ##-------
 
-if (CMAKE_COMPILER_IS_GNUCC AND UNIX AND NOT APPLE)
-   add_definitions(-flifetime-dse=1)
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND UNIX AND NOT APPLE)
+   check_cxx_compiler_flag ("-flifetime-dse=1" SUPPORTS_FLIFETIME)
+   if (SUPPORTS_FLIFETIME)
+     add_definitions(-flifetime-dse=1)
+   endif()
 endif()
 
 # Linker export definitions
@@ -187,6 +200,9 @@ if (TBB_BUILD_STATIC)
   set_property(TARGET tbb_static APPEND PROPERTY COMPILE_DEFINITIONS "__TBB_BUILD=1")
   set_property(TARGET tbb_static APPEND_STRING PROPERTY COMPILE_FLAGS ${ENABLE_RTTI})
   install(TARGETS tbb_static ARCHIVE DESTINATION lib)
+  if (MSVC)
+    target_compile_definitions(tbb_static PUBLIC __TBB_NO_IMPLICIT_LINKAGE=1)
+  endif()
 endif()
 
 if (TBB_BUILD_SHARED)
@@ -202,15 +218,26 @@ if (TBB_BUILD_SHARED)
   else ()
     set_property(TARGET tbb APPEND PROPERTY LINK_FLAGS "-Wl,-version-script,${CMAKE_CURRENT_BINARY_DIR}/tbb.def")
   endif()
+
   install(TARGETS tbb
           LIBRARY DESTINATION lib
           ARCHIVE DESTINATION lib
           RUNTIME DESTINATION bin)
+  if (UNIX AND NOT APPLE)
+    target_link_libraries(tbb PUBLIC pthread dl)
+  endif()
+  if (MSVC)
+    target_compile_definitions(tbb PUBLIC __TBB_NO_IMPLICIT_LINKAGE=1)
+  endif()
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCC)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # Quench a warning on GCC
   set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/tbb/governor.cpp COMPILE_FLAGS "-Wno-missing-field-initializers ")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  # Quench a warning on Clang
+  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/tbb/itt_notify.cpp COMPILE_FLAGS "-Wno-varargs ")
 elseif(MSVC)
   # Quench a warning on MSVC
   set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/tbb/scheduler.cpp COMPILE_FLAGS "/wd4458 ")
@@ -222,6 +249,9 @@ if(TBB_BUILD_TBBMALLOC)
     add_library(tbbmalloc_static STATIC ${tbbmalloc_static_src})
     set_property(TARGET tbbmalloc_static APPEND PROPERTY COMPILE_DEFINITIONS "__TBBMALLOC_BUILD=1")
     set_property(TARGET tbbmalloc_static APPEND_STRING PROPERTY COMPILE_FLAGS ${DISABLE_RTTI})
+    if (MSVC)
+      target_compile_definitions(tbbmalloc_static PUBLIC __TBB_NO_IMPLICIT_LINKAGE=1)
+    endif()
     install(TARGETS tbbmalloc_static ARCHIVE DESTINATION lib)
   endif()
 
@@ -237,10 +267,16 @@ if(TBB_BUILD_TBBMALLOC)
     else ()
       set_property(TARGET tbbmalloc APPEND PROPERTY LINK_FLAGS "-Wl,-version-script,${CMAKE_CURRENT_BINARY_DIR}/tbbmalloc.def")
     endif()
+    if (MSVC)
+      target_compile_definitions(tbbmalloc PUBLIC __TBB_NO_IMPLICIT_LINKAGE=1)
+    endif()
     install(TARGETS tbbmalloc
             LIBRARY DESTINATION lib
             ARCHIVE DESTINATION lib
             RUNTIME DESTINATION bin)
+    if (UNIX AND NOT APPLE)
+      target_link_libraries(tbbmalloc PUBLIC pthread dl)
+    endif()
   endif()
 endif()
 
@@ -262,6 +298,9 @@ if(TBB_BUILD_TBBMALLOC_PROXY)
             LIBRARY DESTINATION lib
             ARCHIVE DESTINATION lib
             RUNTIME DESTINATION bin)
+    if (UNIX AND NOT APPLE)
+      target_link_libraries(tbbmalloc_proxy PUBLIC pthread dl)
+    endif()
   endif()
 endif()
 
@@ -282,7 +321,6 @@ endif()
 include_directories (${CMAKE_BINARY_DIR})
 configure_file (build/version_string.ver.in version_string.ver @ONLY)
 
-
 if (TBB_BUILD_TESTS)
   enable_language (C)
   enable_testing ()
@@ -290,35 +328,37 @@ if (TBB_BUILD_TESTS)
   find_library (LIBRT_LIBRARIES rt)
   find_library (LIDL_LIBRARIES dl)
   find_package (Threads)
-  find_package (OpenMP)
-
-  add_custom_target (tests)
+  if (NOT APPLE)
+    find_package (OpenMP)
+  endif()
 
   macro (tbb_add_test testname)
-    add_executable (test_${testname} EXCLUDE_FROM_ALL src/test/test_${testname}.cpp)
-    add_dependencies (tests test_${testname})
+    set (full_testname tbb_test_${testname})
+    add_executable (${full_testname} src/test/test_${testname}.cpp)
     if (TBB_BUILD_SHARED)
-      target_link_libraries (test_${testname} tbb tbbmalloc)
+      target_link_libraries (${full_testname} tbb tbbmalloc)
+      target_compile_definitions (${full_testname} PRIVATE __TBB_LIB_NAME=tbb$<$<CONFIG:Debug>:_debug>)
     else ()
-      target_link_libraries (test_${testname} tbb_static tbbmalloc_static)
+      target_link_libraries (${full_testname} tbb_static tbbmalloc_static)
+      target_compile_definitions (${full_testname} PRIVATE __TBB_LIB_NAME=tbb_static$<$<CONFIG:Debug>:_debug>)
     endif ()
     if (LIBRT_LIBRARIES)
-      target_link_libraries (test_${testname} ${LIBRT_LIBRARIES})
+      target_link_libraries (${full_testname} ${LIBRT_LIBRARIES})
     endif ()
     if (LIDL_LIBRARIES)
-      target_link_libraries (test_${testname} ${LIDL_LIBRARIES})
+      target_link_libraries (${full_testname} ${LIDL_LIBRARIES})
     endif ()
     if (Threads_FOUND)
-      target_link_libraries (test_${testname} ${CMAKE_THREAD_LIBS_INIT})
+      target_link_libraries (${full_testname} ${CMAKE_THREAD_LIBS_INIT})
     endif ()
     if (OPENMP_FOUND AND "${testname}" MATCHES "openmp")
-      set_target_properties (test_${testname} PROPERTIES COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
-      set_target_properties (test_${testname} PROPERTIES LINK_FLAGS "${OpenMP_CXX_FLAGS}")
+      set_target_properties (${full_testname} PROPERTIES COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
+      set_target_properties (${full_testname} PROPERTIES LINK_FLAGS "${OpenMP_CXX_FLAGS}")
     endif()
     if (MINGW)
-      target_link_libraries (test_${testname} psapi)
+      target_link_libraries (${full_testname} psapi)
     endif ()
-    add_test (NAME ${testname} COMMAND test_${testname})
+    add_test (NAME ${full_testname} COMMAND ${full_testname})
   endmacro ()
 
   tbb_add_test (aggregator)
@@ -326,7 +366,7 @@ if (TBB_BUILD_TESTS)
   tbb_add_test (assembly)
   tbb_add_test (async_msg)
   tbb_add_test (async_node)
-#   tbb_add_test (atomic) # msvc64/debug timeouts: Compile-time initialization fails for static tbb::atomic variables
+  # tbb_add_test (atomic) # msvc64/debug timeouts: Compile-time initialization fails for static tbb::atomic variables
   tbb_add_test (blocked_range2d)
   tbb_add_test (blocked_range3d)
   tbb_add_test (blocked_range)
@@ -340,7 +380,7 @@ if (TBB_BUILD_TESTS)
   tbb_add_test (composite_node)
   tbb_add_test (concurrent_hash_map)
   tbb_add_test (concurrent_lru_cache)
-#   tbb_add_test (concurrent_monitor) # too long
+  # tbb_add_test (concurrent_monitor) # too long
   # tbb_add_test (concurrent_priority_queue)
   tbb_add_test (concurrent_queue)
   # tbb_add_test (concurrent_queue_whitebox)
@@ -352,15 +392,15 @@ if (TBB_BUILD_TESTS)
   tbb_add_test (dynamic_link)
   # tbb_add_test (eh_algorithms)
   tbb_add_test (eh_flow_graph)
-#   tbb_add_test (eh_tasks)
+  # tbb_add_test (eh_tasks)
   tbb_add_test (enumerable_thread_specific)
   tbb_add_test (examples_common_utility)
   # tbb_add_test (fast_random)
   tbb_add_test (flow_graph)
   tbb_add_test (flow_graph_whitebox)
-#   tbb_add_test (fp) # mingw: harness_fp.h:66, assertion !checkConsistency || (ctl.mxcsr & SSE_RND_MODE_MASK) >> 3 == (ctl.x87cw & FE_RND_MODE_MASK): failed
-#   tbb_add_test (function_node) # mingw:random timeout
-#   tbb_add_test (global_control)
+  # tbb_add_test (fp) # mingw: harness_fp.h:66, assertion !checkConsistency || (ctl.mxcsr & SSE_RND_MODE_MASK) >> 3 == (ctl.x87cw & FE_RND_MODE_MASK): failed
+  # tbb_add_test (function_node) # mingw:random timeout
+  # tbb_add_test (global_control)
   # tbb_add_test (global_control_whitebox)
   tbb_add_test (halt)
   tbb_add_test (handle_perror)
@@ -369,20 +409,20 @@ if (TBB_BUILD_TESTS)
   tbb_add_test (inits_loop)
   tbb_add_test (intrusive_list)
   tbb_add_test (ittnotify)
-#   tbb_add_test (join_node) #msvc/64: fatal error C1128: number of sections exceeded object file format limit: compile with /bigob
+  # tbb_add_test (join_node) #msvc/64: fatal error C1128: number of sections exceeded object file format limit: compile with /bigob
   tbb_add_test (lambda)
   tbb_add_test (limiter_node)
   # tbb_add_test (malloc_atexit)
   tbb_add_test (malloc_compliance)
   tbb_add_test (malloc_init_shutdown)
   # tbb_add_test (malloc_lib_unload)
-#   tbb_add_test (malloc_overload)
+  # tbb_add_test (malloc_overload)
   tbb_add_test (malloc_pools)
   tbb_add_test (malloc_regression)
   # tbb_add_test (malloc_used_by_lib)
   # tbb_add_test (malloc_whitebox)
   tbb_add_test (model_plugin)
-#   tbb_add_test (multifunction_node) # too long
+  # tbb_add_test (multifunction_node) # too long
   tbb_add_test (mutex)
   tbb_add_test (mutex_native_threads)
   # tbb_add_test (opencl_node)
@@ -400,37 +440,37 @@ if (TBB_BUILD_TESTS)
   tbb_add_test (parallel_scan)
   tbb_add_test (parallel_sort)
   tbb_add_test (parallel_while)
-#   tbb_add_test (partitioner_whitebox) # too long
+  # tbb_add_test (partitioner_whitebox) # too long
   tbb_add_test (pipeline)
-#   tbb_add_test (pipeline_with_tbf) # takes forever on appveyor
+  # tbb_add_test (pipeline_with_tbf) # takes forever on appveyor
   tbb_add_test (priority_queue_node)
   tbb_add_test (queue_node)
   tbb_add_test (reader_writer_lock)
-#   tbb_add_test (runtime_loader) # LINK : fatal error LNK1104: cannot open file 'tbbproxy.lib' [C:\projects\tbb\test_runtime_loader.vcxproj]
+  # tbb_add_test (runtime_loader) # LINK : fatal error LNK1104: cannot open file 'tbbproxy.lib' [C:\projects\tbb\test_runtime_loader.vcxproj]
   tbb_add_test (rwm_upgrade_downgrade)
   # tbb_add_test (ScalableAllocator)
   tbb_add_test (ScalableAllocator_STL)
   tbb_add_test (semaphore)
-#   tbb_add_test (sequencer_node) # msvc: timeout
+  # tbb_add_test (sequencer_node) # msvc: timeout
   tbb_add_test (source_node)
   tbb_add_test (split_node)
   tbb_add_test (static_assert)
   tbb_add_test (std_thread)
   tbb_add_test (tagged_msg)
-#   tbb_add_test (task_arena) # LINK : fatal error LNK1104: cannot open file '__TBB_LIB_NAME.lib' [C:\projects\tbb\test_task_arena.vcxproj]
+  # tbb_add_test (task_arena) # LINK : fatal error LNK1104: cannot open file '__TBB_LIB_NAME.lib' [C:\projects\tbb\test_task_arena.vcxproj]
   # tbb_add_test (task_assertions)
   tbb_add_test (task_auto_init)
   tbb_add_test (task)
-#   tbb_add_test (task_enqueue) # too long
+  # tbb_add_test (task_enqueue) # too long
   tbb_add_test (task_group)
   # tbb_add_test (task_leaks)
-#   tbb_add_test (task_priority)
-#   tbb_add_test (task_scheduler_init) # msvc: test_task_scheduler_init.cpp:68, assertion !test_mandatory_parallelism || Harness::CanReachConcurrencyLevel(threads): failed
+  # tbb_add_test (task_priority)
+  # tbb_add_test (task_scheduler_init) # msvc: test_task_scheduler_init.cpp:68, assertion !test_mandatory_parallelism || Harness::CanReachConcurrencyLevel(threads): failed
   tbb_add_test (task_scheduler_observer)
   tbb_add_test (task_steal_limit)
   tbb_add_test (tbb_condition_variable)
   tbb_add_test (tbb_fork)
-  tbb_add_test (tbb_header)
+  # tbb_add_test (tbb_header)
   tbb_add_test (tbb_thread)
   # tbb_add_test (tbb_version)
   tbb_add_test (tick_count)
