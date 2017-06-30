@@ -12,6 +12,7 @@ set CMAKE_CONFIG="Release"
 cmake -LAH -G"NMake Makefiles"                             ^
   -DCMAKE_INSTALL_PREFIX="%LIBRARY_PREFIX%"                ^
   -DCMAKE_BUILD_TYPE="%CMAKE_CONFIG%"                      ^
+  -DTBB_BUILD_TESTS=OFF                                    ^
   ..
 if errorlevel 1 exit 1
 
