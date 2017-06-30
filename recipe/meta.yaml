@@ -10,7 +10,7 @@ source:
   sha256: 755b7dfaf018f5d8ae3bf2e8cfa0fa4672372548e8cc043ed1eb5b22a9bf5b72
 
 build:
-  number: 0
+  number: 1
   features:
     - vc9  # [win and py27]
     - vc14  # [win and py>=35]
@@ -28,11 +28,10 @@ test:
 
   commands:
     - test -f ${PREFIX}/include/tbb/tbb.h  # [unix]
-    - test -f ${PREFIX}/lib/libtbb.so  # [linux]
-    - test -f ${PREFIX}/lib/libtbb.dylib  # [osx]
+    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb${SHLIB_EXT}']"  # [unix]
+    - python -c "import ctypes; ctypes.cdll[r'%PREFIX%\Library\bin\tbb.dll']"  # [win]
     - if not exist %PREFIX%\\Library\\include\\tbb\\tbb.h exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\lib\\tbb_debug.lib exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\bin\\tbb_debug.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\tbb.lib exit 1  # [win]
 
 about:
   home: http://www.threadingbuildingblocks.org

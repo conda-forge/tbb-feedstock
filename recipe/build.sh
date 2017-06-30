@@ -3,11 +3,22 @@
 make -j${CPU_COUNT}
 
 install -d ${PREFIX}/lib
-# filter libtbb.dylib ( or .so ), libtbbmalloc.dylib ( or .so )
-cp `find . -name "*lib*" | grep tbb | grep release` ${PREFIX}/lib
 
+# filter libtbb.dylib ( or .so ), libtbbmalloc.dylib ( or .so )
+cp `find . -name "libtbb*${SHLIB_EXT}*" | grep release` ${PREFIX}/lib
+
+# fix symlinks
+if test `uname` = "Linux"
+then
+  cd ${PREFIX}/lib
+  ln -sf libtbb.so.2 libtbb.so
+  ln -sf libtbbmalloc.so.2 libtbbmalloc.so
+  ln -sf libtbbmalloc_proxy.so.2 libtbbmalloc_proxy.so
+  cd -
+fi
+
+# includes
 install -d ${PREFIX}/include
-# copy the include files
 cp -r ./include/tbb ${PREFIX}/include
 
 # simple test instead of "make test" to avoid timeout
