@@ -1,4 +1,4 @@
-{% set version = "2017_20170604" %}
+{% set version = "2018_20170726" %}
 
 package:
   name: tbb
@@ -6,11 +6,11 @@ package:
 
 source:
   fn: tbb{{ version }}oss_src.tgz
-  url: https://github.com/01org/tbb/archive/2017_U7.tar.gz
-  sha256: 755b7dfaf018f5d8ae3bf2e8cfa0fa4672372548e8cc043ed1eb5b22a9bf5b72
+  url: https://github.com/01org/tbb/archive/2018.tar.gz
+  sha256: 94f643f1edfaccb57d64b503c7c96f00dec64e8635c054bbaa33855d72c5822d
 
 build:
-  number: 1
+  number: 0
   features:
     - vc9  # [win and py27]
     - vc14  # [win and py>=35]
