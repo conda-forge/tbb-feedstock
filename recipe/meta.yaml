@@ -10,9 +10,8 @@ source:
   sha256: 94f643f1edfaccb57d64b503c7c96f00dec64e8635c054bbaa33855d72c5822d
 
 build:
-  number: 0
+  number: 1
   features:
-    - vc9  # [win and py27]
     - vc14  # [win and py>=35]
   skip: true  # [win and py36]
 
