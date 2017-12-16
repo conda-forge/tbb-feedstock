@@ -14,9 +14,9 @@ source:
 build:
   number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
   {% set args=' --build-args=stdver=c++11 --install-libs --install-devel --install-python --install-docs' %}
-  script: python build/build.py {{ args }}                                          # [linux]
+  script: python build/build.py {{ args }}                                          # [unix]
   script: python build/build.py --make-tool=mingw32-make {{ args }}                 # [win]
-  script: env MACOSX_DEPLOYMENT_TARGET=10.7 python build/build.py {{ args }}        # [osx]
+  #script: env MACOSX_DEPLOYMENT_TARGET=10.7 python build/build.py {{ args }}       # [osx]
   script_env:
     - OS    # [win]
   features:
@@ -36,7 +36,7 @@ requirements:
 
 test:
   requires:
-    - python {{ os.environ.get('PY_VER', '') + '*' }}  # [win]
+    - python
   imports:
       - tbb
       - TBB
