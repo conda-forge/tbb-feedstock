@@ -1,6 +1,6 @@
-{% set vmajor = load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MAJOR +(\d+)").group(1)|int %}
-{% set vminor = load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MINOR +(\d+)").group(1)|int %}
-{% set vinterface = load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_INTERFACE_VERSION +(\d+)").group(1)|int %}
+{% set vmajor = 2018 %}       # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MAJOR +(\d+)").group(1)|int
+{% set vminor = 0 %}          # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MINOR +(\d+)").group(1)|int
+{% set vinterface =  10002 %} # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_INTERFACE_VERSION +(\d+)").group(1)|int
 {% set version = "%d.%d.%d"%(vmajor,vminor,vinterface%1000) %}
 
 package:
@@ -9,11 +9,11 @@ package:
 
 source:
   git_url: https://github.com/01org/tbb.git
-  git_tag: 2018_U2
+  git_tag: {{ vmajor }}_U{{ vinterface%1000 }}
 
 build:
   number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
-  {% set args=' --build-args=stdver=c++11 --install-libs --install-devel --install-python --install-docs' %}
+  {% set args=' --build-args=stdver=c++11 --install-libs --install-devel --install-docs' %} #  no --install-python yet
   script: python build/build.py {{ args }}                                          # [unix]
   script: python build/build.py --make-tool=mingw32-make {{ args }}                 # [win]
   #script: env MACOSX_DEPLOYMENT_TARGET=10.7 python build/build.py {{ args }}       # [osx]
@@ -23,7 +23,7 @@ build:
     - vc9   # [win and py27]
     - vc14  # [win and py>=35]
   entry_points:
-    - python-tbb = tbb:_main
+  #  - python-tbb = tbb:_main # for tb4py
 
 requirements:
   build:
@@ -32,14 +32,14 @@ requirements:
     - swig
     - m2w64-make # [win]
   run:
-    - python
+    # - python # for tbb4py
 
 test:
   requires:
     - python
-  imports:
-      - tbb
-      - TBB
+  #imports: # for tbb4py
+  #  - tbb
+  #  - TBB
   commands:
     - test -f ${PREFIX}/include/tbb/tbb.h  # [unix]
     - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb.so.2']"  # [linux]
@@ -47,8 +47,8 @@ test:
     - python -c "import ctypes; ctypes.cdll[r'%PREFIX%\Library\bin\tbb.dll']"  # [win]
     - if not exist %PREFIX%\\Library\\include\\tbb\\tbb.h exit 1  # [win]
     - if not exist %PREFIX%\\Library\\lib\\tbb.lib exit 1  # [win]
-    - python-tbb -m TBB -h  #testing both: entry point and module execution
-    - python -m tbb test
+    #- python-tbb -m TBB -h  #testing both: entry point and module execution
+    #- python -m tbb test    # XXX: add test through build/build.py instead
 
 about:
   home: http://www.threadingbuildingblocks.org
