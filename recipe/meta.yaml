@@ -1,6 +1,6 @@
 {% set vmajor = 2018 %}       # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MAJOR +(\d+)").group(1)|int
 {% set vminor = 0 %}          # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MINOR +(\d+)").group(1)|int
-{% set vinterface =  10002 %} # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_INTERFACE_VERSION +(\d+)").group(1)|int
+{% set vinterface =  10003 %} # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_INTERFACE_VERSION +(\d+)").group(1)|int
 {% set version = "%d.%d.%d"%(vmajor,vminor,vinterface%1000) %}
 
 package:
@@ -54,7 +54,7 @@ about:
   home: http://www.threadingbuildingblocks.org
   license: Apache 2.0
   license_file: LICENSE
-  summary: High level abstract threading library and TBB module for Python
+  summary: High level abstract threading library
   dev_url: https://github.com/01org/tbb
   doc_url: https://software.intel.com/en-us/node/506039
 
