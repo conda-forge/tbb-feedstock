@@ -1,6 +1,7 @@
 {% set version = "2018.0.3" %}
 {% set vtag = "2018_U3" %}
-{% set args=" --build-args=stdver=c++11 --install-libs --install-devel --install-docs" %} #  no --install-python yet
+{% set args = " --build-args=stdver=c++11 --install-libs --install-devel --install-docs" %}
+#  no --install-python yet, it will be a separate package
 
 package:
   name: tbb
@@ -12,10 +13,9 @@ source:
   sha256: 23793c8645480148e9559df96b386b780f92194c80120acce79fcdaae0d81f45
 
 build:
-  number: 0      #{{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  number: 0
   script: python build/build.py {{ args }}                                          # [unix]
   script: python build/build.py --make-tool=mingw32-make {{ args }}                 # [win]
-  #script: env MACOSX_DEPLOYMENT_TARGET=10.7 python build/build.py {{ args }}       # [osx]
   script_env:
     - OS    # [win]
   features:
