@@ -34,9 +34,6 @@ struct executor
 
 int main(int,char**) {
 
-  tbb::task_scheduler_init init;  // Automatic number of threads
-  // tbb::task_scheduler_init init(2);  // Explicit number of threads
-
   std::vector<mytask> tasks;
   for (int i=0;i<1000;++i)
     tasks.push_back(mytask(i));
