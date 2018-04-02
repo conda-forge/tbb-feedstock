@@ -1,34 +1,42 @@
-{% set version = "2018_20171205" %}
+{% set vmajor = 2018 %}       # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MAJOR +(\d+)").group(1)|int
+{% set vminor = 0 %}          # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_VERSION_MINOR +(\d+)").group(1)|int
+{% set vinterface =  10003 %} # load_file_regex(load_file='include/tbb/tbb_stddef.h', regex_pattern="TBB_INTERFACE_VERSION +(\d+)").group(1)|int
+{% set version = 2018.0.3 %}  # "%d.%d.%d"%(vmajor,vminor,vinterface%1000)
+{% set args=' --build-args=stdver=c++11 --install-libs --install-devel --install-docs' %} #  no --install-python yet
 
 package:
   name: tbb
   version: {{ version }}
 
 source:
-  fn: tbb{{ version }}oss_src.tgz
-  url: https://github.com/01org/tbb/archive/2018_U2.tar.gz
-  sha256: 78bb9bae474736d213342f01fe1a6d00c6939d5c75b367e2e43e7bf29a6d8eca
+  git_url: https://github.com/01org/tbb.git
+  git_tag: {{ vmajor }}_U{{ vinterface%1000 }}
 
 build:
-  number: 0
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  script: python build/build.py {{ args }}                                          # [unix]
+  script: python build/build.py --make-tool=mingw32-make {{ args }}                 # [win]
+  #script: env MACOSX_DEPLOYMENT_TARGET=10.7 python build/build.py {{ args }}       # [osx]
+  script_env:
+    - OS    # [win]
   features:
-    - vc9  # [win and py27]
+    - vc9   # [win and py27]
     - vc14  # [win and py>=35]
-  skip: true  # [win and py36]
 
 requirements:
   build:
     - toolchain
-    - python  # [win]
-    - cmake  # [win]
+    - python
+    - swig
+    - m2w64-make # [win]
 
 test:
   requires:
-    - python {{ os.environ.get('PY_VER', '') + '*' }}  # [win]
-
+    - python
   commands:
     - test -f ${PREFIX}/include/tbb/tbb.h  # [unix]
-    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb${SHLIB_EXT}']"  # [unix]
+    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb.so.2']"  # [linux]
+    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb${SHLIB_EXT}']"  # [unix and not linux]
     - python -c "import ctypes; ctypes.cdll[r'%PREFIX%\Library\bin\tbb.dll']"  # [win]
     - if not exist %PREFIX%\\Library\\include\\tbb\\tbb.h exit 1  # [win]
     - if not exist %PREFIX%\\Library\\lib\\tbb.lib exit 1  # [win]
@@ -38,7 +46,10 @@ about:
   license: Apache 2.0
   license_file: LICENSE
   summary: High level abstract threading library
+  dev_url: https://github.com/01org/tbb
+  doc_url: https://software.intel.com/en-us/node/506039
 
 extra:
   recipe-maintainers:
     - jschueller
+    - anton-malakhov
