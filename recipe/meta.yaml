@@ -27,7 +27,7 @@ requirements:
     - toolchain
     - python
     - swig
-    - m2w64-make # [win]
+    - m2w64-make  # [win]
 
 test:
   requires:
