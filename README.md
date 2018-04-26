@@ -14,14 +14,16 @@ Summary: High level abstract threading library
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/tbb-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/tbb-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/tbb-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/tbb-feedstock)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/tbb-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/tbb-feedstock/branch/master)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/tbb-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/tbb-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/tbb-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/tbb-feedstock)
+[![Windows](https://img.shields.io/appveyor/ci/conda-forge/tbb-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/tbb-feedstock/branch/master)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tbb/badges/version.svg)](https://anaconda.org/conda-forge/tbb)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tbb/badges/downloads.svg)](https://anaconda.org/conda-forge/tbb)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-tbb-green.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) |
 
 Installing tbb
 ==============
