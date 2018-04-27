@@ -3,7 +3,7 @@
 {% set vinterface = 10003 %}
 
 {% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
-{% set build = 'python build/build.py --build-args=stdver=c++11' %} # [unix]
+{% set build = 'python build/build.py --build-args=stdver=c++11' %}                             # [unix]
 
 package:
   name: tbb
@@ -96,6 +96,14 @@ outputs:
       summary: TBB module for Python
       license: Apache 2.0
       dev_url: https://github.com/01org/tbb
+
+test:
+  requires:
+    - python *  # any python version is ok for sake of testing of shared libraries
+  commands:
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'tbb.dll']           ['TBB_runtime_interface_version']()"  # [win]
 
 about:
   home: http://www.threadingbuildingblocks.org
