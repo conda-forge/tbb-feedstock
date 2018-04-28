@@ -18,9 +18,6 @@ build:
   number: 1
   script_env:
     - OS    # [win]
-  features:
-    - vc9   # [win and py27]
-    - vc14  # [win and py>=35]
 
 requirements:
   build:
@@ -42,17 +39,11 @@ outputs:
   - name: tbb
     build:
       script: {{ build }} --install-libs
-      features:
-        - vc9                                            # [win and py27]
-        - vc14                                           # [win and py>=35]
       binary_relocation: False
 
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
-      features:
-        - vc9                                            # [win and py27]
-        - vc14                                           # [win and py>=35]
       binary_relocation: False
     requirements:
       host:
@@ -69,24 +60,21 @@ outputs:
   - name: tbb4py
     build:
       script: {{ build }} --no-rebuild --install-python
-      features:
-        - vc9                                            # [win and py27]
-        - vc14                                           # [win and py>=35]
       entry_points:
         - python-tbb = tbb:_main
     requirements:
       host:
         - {{ compiler('cxx') }}                          # [win]
         - m2w64-make                                     # [win]
-        - python {{ python }}
+        - python
         - swig
         - {{ pin_subpackage('tbb-devel', exact=True) }}
       run:
         - tbb >={{ version }}                            # while python module works with any compatible tbb...
-        - python {{ python }}
+        - python
     test:
       requires:
-        - python {{ python }}
+        - python
         - {{ pin_subpackage('tbb', exact=True) }}        # we want to test with this specific tbb package
       imports:
         - tbb
