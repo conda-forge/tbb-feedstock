@@ -18,18 +18,21 @@ build:
   number: 1
   script_env:
     - OS    # [win]
+  features:
+    - vc9   # [win and py27]
+    - vc14  # [win and py>=35]
 
 requirements:
   build:
     - toolchain
     - python
     - swig
-    - {{ compiler('cxx') }}  # [win]
-    - m2w64-make  # [win]
+    - {{ compiler('cxx') }}                              # [win]
+    - m2w64-make                                         # [win]
 
 test:
   requires:
-    - python *  # any python version is ok for sake of testing of shared libraries
+    - python *               # any python version is ok for sake of testing of shared libraries
   commands:
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
@@ -40,16 +43,16 @@ outputs:
     build:
       script: {{ build }} --install-libs
       features:
-        - vc9   # [win and py27]
-        - vc14  # [win and py>=35]
+        - vc9                                            # [win and py27]
+        - vc14                                           # [win and py>=35]
       binary_relocation: False
 
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
       features:
-        - vc9   # [win and py27]
-        - vc14  # [win and py>=35]
+        - vc9                                            # [win and py27]
+        - vc14                                           # [win and py>=35]
       binary_relocation: False
     requirements:
       host:
@@ -67,14 +70,14 @@ outputs:
     build:
       script: {{ build }} --no-rebuild --install-python
       features:
-        - vc9   # [win and py27]
-        - vc14  # [win and py>=35]
+        - vc9                                            # [win and py27]
+        - vc14                                           # [win and py>=35]
       entry_points:
         - python-tbb = tbb:_main
     requirements:
       host:
         - {{ compiler('cxx') }}                          # [win]
-        - m2w64-make # [win]
+        - m2w64-make                                     # [win]
         - python {{ python }}
         - swig
         - {{ pin_subpackage('tbb-devel', exact=True) }}
