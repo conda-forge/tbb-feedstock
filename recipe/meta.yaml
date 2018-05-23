@@ -24,7 +24,7 @@ requirements:
     - toolchain
     - python
     - swig
-    - {{ compiler('cxx') }}                              # [win]
+    - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
 
 test:
@@ -47,7 +47,7 @@ outputs:
       binary_relocation: False
     requirements:
       host:
-        - {{ compiler('cxx') }}                          # [win]
+        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
@@ -64,7 +64,7 @@ outputs:
         - python-tbb = tbb:_main
     requirements:
       host:
-        - {{ compiler('cxx') }}                          # [win]
+        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
         - python
         - swig
