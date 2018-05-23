@@ -21,8 +21,7 @@ build:
 
 requirements:
   build:
-    - python
-    - swig
+    - python *
     - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
 
@@ -43,15 +42,17 @@ outputs:
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
     requirements:
-      host:
+      build:
+        - python *
+        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       commands:
-        - if not exist %LIBRARY_INC%\\tbb\\tbb.h exit 1  # [win]
-        - if not exist %LIBRARY_LIB%\\tbb.lib exit 1     # [win]
-        - test -f ${PREFIX}/include/tbb/tbb.h            # [unix]
+        - if not exist %PREFIX%\Library\include\tbb\tbb.h exit 1  # [win]
+        - if not exist %PREFIX%\Library\lib\tbb.lib exit 1        # [win]
+        - test -f ${PREFIX}/include/tbb/tbb.h                     # [unix]
 
   - name: tbb4py
     build:
@@ -59,10 +60,12 @@ outputs:
       entry_points:
         - python-tbb = tbb:_main
     requirements:
-      host:
+      build:
+        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
-        - python
         - swig
+      host:
+        - python
         - {{ pin_subpackage('tbb-devel', exact=True) }}
       run:
         - tbb >={{ version }}                            # while python module works with any compatible tbb...
