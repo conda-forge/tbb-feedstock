@@ -3,7 +3,7 @@
 {% set vinterface = 10003 %}
 
 {% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
-{% set build = 'python build/build.py --build-args=stdver=c++11' %}                             # [unix]
+{% set build = 'python build/build.py --build-args="stdver=c++11 CXXFLAGS= CFLAGS="' %}         # [unix]
 
 package:
   name: tbb
@@ -21,7 +21,6 @@ build:
 
 requirements:
   build:
-    - toolchain
     - python
     - swig
     - {{ compiler('cxx') }}
@@ -39,15 +38,12 @@ outputs:
   - name: tbb
     build:
       script: {{ build }} --install-libs
-      binary_relocation: False
 
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
-      binary_relocation: False
     requirements:
       host:
-        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
@@ -64,7 +60,6 @@ outputs:
         - python-tbb = tbb:_main
     requirements:
       host:
-        - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
         - python
         - swig
