@@ -7,5 +7,5 @@ pin_run_as_build:
 python:
 - '2.7'
 zip_keys:
-- - python
-  - cxx_compiler
+- - cxx_compiler
+  - python
