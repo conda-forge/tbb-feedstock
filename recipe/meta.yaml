@@ -1,7 +1,6 @@
 {% set version = "2018.0.4" %}
 {% set vtag = "2018_U4" %}
 {% set vinterface = 10004 %}
-{% set sha256tgz = d5604a04787c8a037d4944eeb89792e7c45f6a83c141b20df7ee89c2fb012ed1 %}
 
 {% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
 {% set build = 'python build/build.py --build-args="stdver=c++11 CXXFLAGS= CFLAGS="' %}         # [unix]
@@ -13,7 +12,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: {{ sha256tgz }}
+  sha256: d5604a04787c8a037d4944eeb89792e7c45f6a83c141b20df7ee89c2fb012ed1
 
 build:
   number: 1
