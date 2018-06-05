@@ -1,7 +1,16 @@
-{% set version = "2018.0.3" %}
-{% set vtag = "2018_U3" %}
-{% set args = " --build-args=stdver=c++11 --install-libs --install-devel --install-docs" %}
-#  no --install-python yet, it will be a separate package
+{% set version = "2018.0.4" %}
+
+{% set year = version.split('.')[0]|int %}
+{% set update = version.split('.')[2]|int %}
+{% if update == 0 %}
+{%   set vtag = "%d" % year %}
+{% else %}
+{%   set vtag = "%d_U%d" % (year, update) %}
+{% endif %}
+{% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
+
+{% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
+{% set build = 'python build/build.py --build-args="stdver=c++11 CXXFLAGS= CFLAGS="' %}         # [unix]
 
 package:
   name: tbb
@@ -10,35 +19,80 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 23793c8645480148e9559df96b386b780f92194c80120acce79fcdaae0d81f45
+  sha256: d5604a04787c8a037d4944eeb89792e7c45f6a83c141b20df7ee89c2fb012ed1
 
 build:
   number: 0
-  script: python build/build.py {{ args }}                                          # [unix]
-  script: python build/build.py --make-tool=mingw32-make {{ args }}                 # [win]
   script_env:
     - OS    # [win]
-  features:
-    - vc9   # [win and py27]
-    - vc14  # [win and py>=35]
 
 requirements:
   build:
-    - toolchain
-    - python
-    - swig
-    - m2w64-make  # [win]
+    - python *
+    - {{ compiler('cxx') }}
+    - m2w64-make                                         # [win]
 
 test:
   requires:
-    - python
+    - python *               # any python version is ok for sake of testing of shared libraries
   commands:
-    - test -f ${PREFIX}/include/tbb/tbb.h  # [unix]
-    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb.so.2']"  # [linux]
-    - python -c "import ctypes; ctypes.cdll[r'${PREFIX}/lib/libtbb${SHLIB_EXT}']"  # [unix and not linux]
-    - python -c "import ctypes; ctypes.cdll[r'%PREFIX%\Library\bin\tbb.dll']"  # [win]
-    - if not exist %PREFIX%\\Library\\include\\tbb\\tbb.h exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\lib\\tbb.lib exit 1  # [win]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'tbb.dll']           ['TBB_runtime_interface_version']()"  # [win]
+
+outputs:
+  - name: tbb
+    build:
+      script: {{ build }} --install-libs
+
+  - name: tbb-devel
+    build:
+      script: {{ build }} --no-rebuild --install-devel --install-docs
+    requirements:
+      build:
+        - python *
+        - {{ compiler('cxx') }}
+        - m2w64-make                                     # [win]
+      run:
+        - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
+    test:
+      commands:
+        - if not exist %PREFIX%\Library\include\tbb\tbb.h exit 1  # [win]
+        - if not exist %PREFIX%\Library\lib\tbb.lib exit 1        # [win]
+        - test -f ${PREFIX}/include/tbb/tbb.h                     # [unix]
+
+  - name: tbb4py
+    build:
+      script: {{ build }} --no-rebuild --install-python
+      entry_points:
+        - python-tbb = tbb:_main
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - m2w64-make                                     # [win]
+        - swig
+      host:
+        - python
+        - {{ pin_subpackage('tbb-devel', exact=True) }}
+      run:
+        - tbb >={{ version }}                            # while python module works with any compatible tbb...
+        - python
+    test:
+      requires:
+        - python
+        - {{ pin_subpackage('tbb', exact=True) }}        # we want to test with this specific tbb package
+      imports:
+        - tbb
+        - TBB
+      commands:
+        - python-tbb -h
+        - python -m TBB -h
+        - python -m tbb -h
+        - python -m tbb test
+    about:
+      summary: TBB module for Python
+      license: Apache 2.0
+      dev_url: https://github.com/01org/tbb
 
 about:
   home: http://www.threadingbuildingblocks.org
