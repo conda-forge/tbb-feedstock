@@ -2,10 +2,14 @@
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[2]|int %}
-{% if update == 0 %}
+{% if version.split('.')[1] == '0' %}
+{%  if update == 0 %}
 {%   set vtag = "%d" % year %}
-{% else %}
+{%  else %}
 {%   set vtag = "%d_U%d" % (year, update) %}
+{%  endif %}
+{% else %}  # have to take into account for sake of the bot
+{%  set vtag = "malformed_" + version %}
 {% endif %}
 {% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
 
