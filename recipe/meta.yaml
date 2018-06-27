@@ -1,4 +1,4 @@
-{% set version = "2018.0.4" %}
+{% set version = "2018.0.5" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[2]|int %}
@@ -10,7 +10,7 @@
 {% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
 
 {% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
-{% set build = 'python build/build.py --build-args="stdver=c++11 CXXFLAGS= CFLAGS="' %}         # [unix]
+{% set build = 'python build/build.py --build-args="stdver=c++11"' %}                           # [unix]
 
 package:
   name: tbb
@@ -19,7 +19,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: d5604a04787c8a037d4944eeb89792e7c45f6a83c141b20df7ee89c2fb012ed1
+  sha256: c4c2896af527392496c5e01ef8579058a71b6eebbd695924cd138841c13f07be
 
 build:
   number: 0
