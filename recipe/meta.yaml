@@ -1,4 +1,4 @@
-{% set version = "2018.0.4" %}
+{% set version = "2018.0.5" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[2]|int %}
@@ -10,7 +10,7 @@
 {% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
 
 {% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
-{% set build = 'python build/build.py --build-args="stdver=c++11 CXXFLAGS= CFLAGS="' %}         # [unix]
+{% set build = 'python build/build.py --build-args="stdver=c++11"' %}                           # [unix]
 
 package:
   name: tbb
