@@ -19,7 +19,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: d5604a04787c8a037d4944eeb89792e7c45f6a83c141b20df7ee89c2fb012ed1
+  sha256: c4c2896af527392496c5e01ef8579058a71b6eebbd695924cd138841c13f07be
 
 build:
   number: 0
