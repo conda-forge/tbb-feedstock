@@ -1,8 +1,8 @@
-{% set version = "2018.0.5" %}
+{% set version = "2019.0" %}
 
 {% set year = version.split('.')[0]|int %}
-{% set update = version.split('.')[2]|int %}
-{% if version.split('.')[1] == '0' %}
+{% set update = version.split('.')[1]|int %}
+{% if version.split('.').__len__() == 2 %}
 {%  if update == 0 %}
 {%   set vtag = "%d" % year %}
 {%  else %}
@@ -23,7 +23,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: c4c2896af527392496c5e01ef8579058a71b6eebbd695924cd138841c13f07be
+  sha256: 4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399
 
 build:
   number: 0
@@ -52,6 +52,9 @@ outputs:
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
+      run_exports:
+        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
+        - {{ pin_subpackage('tbb', max_pin=None) }}
     requirements:
       build:
         - python *
