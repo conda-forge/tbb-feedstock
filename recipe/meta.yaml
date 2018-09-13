@@ -2,7 +2,7 @@
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
-{% if len(version.split('.')) == 2 %}
+{% if version.split('.').__len__() == 2 %}
 {%  if update == 0 %}
 {%   set vtag = "%d" % year %}
 {%  else %}
