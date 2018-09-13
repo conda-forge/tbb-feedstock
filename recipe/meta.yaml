@@ -1,8 +1,8 @@
-{% set version = "2019.0.0" %}
+{% set version = "2019.0" %}
 
 {% set year = version.split('.')[0]|int %}
-{% set update = version.split('.')[2]|int %}
-{% if version.split('.')[1] == '0' %}
+{% set update = version.split('.')[1]|int %}
+{% if len(version.split('.')) == 2 %}
 {%  if update == 0 %}
 {%   set vtag = "%d" % year %}
 {%  else %}
@@ -52,6 +52,9 @@ outputs:
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
+      run_exports:
+        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
+        - {{ pin_subpackage('tbb', max_pin=None) }}
     requirements:
       build:
         - python *
