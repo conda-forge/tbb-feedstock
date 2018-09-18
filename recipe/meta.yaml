@@ -24,6 +24,8 @@ source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
   sha256: 4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399
+  patches:
+    - 1byte-2008-intrinsics.patch                        # [win and py27]
 
 build:
   number: 0
@@ -35,6 +37,7 @@ requirements:
     - python *
     - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
+    - make                                               # [unix]
 
 test:
   requires:
@@ -60,6 +63,7 @@ outputs:
         - python *
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
+        - make                                           # [unix]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
@@ -77,6 +81,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
+        - make                                           # [unix]
         - swig
       host:
         - python
