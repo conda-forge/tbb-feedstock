@@ -77,7 +77,7 @@ outputs:
         - set INCLUDE=%INCLUDE%;%LIBRARY_INC%            # [win]
         - set LIB=%LIB%;%LIBRARY_LIB%                    # [win]
         - nmake /f Makefile.windows                      # [win]
-        - make -C examples/test_all/fibonacci CXXFLAGS=$CPPFLAGS TBBROOT=$PREFIX  # [unix]
+        - make -C examples/test_all/fibonacci CXXFLAGS="$CPPFLAGS $LDFLAGS" TBBROOT=$PREFIX  # [unix]
 
   - name: tbb4py
     build:
