@@ -67,16 +67,21 @@ outputs:
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
+      requires:
+        - {{ compiler('cxx') }}
+        - make                                           # [unix]
+      source_files:
+        - examples/test_all/fibonacci
       commands:
-        - if not exist %PREFIX%\Library\include\tbb\tbb.h exit 1  # [win]
-        - if not exist %PREFIX%\Library\lib\tbb.lib exit 1        # [win]
-        - test -f ${PREFIX}/include/tbb/tbb.h                     # [unix]
+        - cd examples\test_all\fibonacci                 # [win]
+        - set INCLUDE=%INCLUDE%;%LIBRARY_INC%            # [win]
+        - set LIB=%LIB%;%LIBRARY_LIB%                    # [win]
+        - nmake /f Makefile.windows                      # [win]
+        - make -C examples/test_all/fibonacci            # [unix]
 
   - name: tbb4py
     build:
       script: {{ build }} --no-rebuild --install-python
-      entry_points:
-        - python-tbb = tbb:_main
     requirements:
       build:
         - {{ compiler('cxx') }}
@@ -97,7 +102,6 @@ outputs:
         - tbb
         - TBB
       commands:
-        - python-tbb -h
         - python -m TBB -h
         - python -m tbb -h
         - python -m tbb test
