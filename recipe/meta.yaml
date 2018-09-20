@@ -1,8 +1,8 @@
-{% set version = "2018.0.5" %}
+{% set version = "2019.0" %}
 
 {% set year = version.split('.')[0]|int %}
-{% set update = version.split('.')[2]|int %}
-{% if version.split('.')[1] == '0' %}
+{% set update = version.split('.')[1]|int %}
+{% if version.split('.').__len__() == 2 %}
 {%  if update == 0 %}
 {%   set vtag = "%d" % year %}
 {%  else %}
@@ -13,8 +13,10 @@
 {% endif %}
 {% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
 
-{% set build = 'python build/build.py --make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}  # [win]
-{% set build = 'python build/build.py --build-args="stdver=c++11"' %}                           # [unix]
+{% set winfl = '--make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}
+# overriding -MD flag for issue #36
+{% set build = 'python build/build.py --build-args="CXXFLAGS= CFLAGS=" '+winfl %}  # [win]
+{% set build = 'python build/build.py --build-args="stdver=c++11"' %}              # [unix]
 
 package:
   name: tbb
@@ -23,7 +25,9 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: c4c2896af527392496c5e01ef8579058a71b6eebbd695924cd138841c13f07be
+  sha256: 4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399
+  patches:
+    - 1byte-2008-intrinsics.patch                        # [win and py27]
 
 build:
   number: 0
@@ -35,6 +39,7 @@ requirements:
     - python *
     - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
+    - make                                               # [unix]
 
 test:
   requires:
@@ -52,28 +57,38 @@ outputs:
   - name: tbb-devel
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
+      run_exports:
+        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
+        - {{ pin_subpackage('tbb', max_pin=None) }}
     requirements:
       build:
         - python *
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
+        - make                                           # [unix]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
+      requires:
+        - {{ compiler('cxx') }}
+        - make                                           # [unix]
+      source_files:
+        - examples/test_all/fibonacci
       commands:
-        - if not exist %PREFIX%\Library\include\tbb\tbb.h exit 1  # [win]
-        - if not exist %PREFIX%\Library\lib\tbb.lib exit 1        # [win]
-        - test -f ${PREFIX}/include/tbb/tbb.h                     # [unix]
+        - cd examples\test_all\fibonacci                 # [win]
+        - set INCLUDE=%INCLUDE%;%LIBRARY_INC%            # [win]
+        - set LIB=%LIB%;%LIBRARY_LIB%                    # [win]
+        - nmake /f Makefile.windows                      # [win]
+        - make -C examples/test_all/fibonacci CXXFLAGS="$CPPFLAGS $LDFLAGS" TBBROOT=$PREFIX  # [unix]
 
   - name: tbb4py
     build:
       script: {{ build }} --no-rebuild --install-python
-      entry_points:
-        - python-tbb = tbb:_main
     requirements:
       build:
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
+        - make                                           # [unix]
         - swig
       host:
         - python
@@ -89,7 +104,6 @@ outputs:
         - tbb
         - TBB
       commands:
-        - python-tbb -h
         - python -m TBB -h
         - python -m tbb -h
         - python -m tbb test
