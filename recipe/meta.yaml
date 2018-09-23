@@ -30,7 +30,7 @@ source:
     - 1byte-2008-intrinsics.patch                        # [win and py27]
 
 build:
-  number: 0
+  number: 1000
   script_env:
     - OS    # [win]
 
