@@ -1,4 +1,4 @@
-{% set version = "2019.0" %}
+{% set version = "2019.1" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -25,7 +25,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399
+  sha256: a4875c6b6853213083e52ecd303546bdf424568ec67cfc7e51d132a7c037c66a
   patches:
     - 1byte-2008-intrinsics.patch                        # [win and py27]
 
