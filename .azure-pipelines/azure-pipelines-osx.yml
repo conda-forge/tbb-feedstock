@@ -28,18 +28,25 @@ jobs:
       rm ~/uninstall_homebrew
     displayName: Remove homebrew
 
-  - bash: |
-      echo "##vso[task.prependpath]$CONDA/bin"
-      sudo chown -R $USER $CONDA
-    displayName: Add conda to PATH
+  - script: |
+      echo "Installing Miniconda"
+      set -x -e
+      curl -o $(Build.StagingDirectory)/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+      chmod +x $(Build.StagingDirectory)/miniconda.sh
+      $(Build.StagingDirectory)/miniconda.sh -b -p $(Build.StagingDirectory)/miniconda
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      echo "Setting up Conda environment"
+    displayName: 'Install miniconda'
 
   - script: |
-      source activate base
-      conda install -n base -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build shyaml
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
+      conda install -n base -c conda-forge --quiet --yes conda-forge-ci-setup=2 conda-build
     displayName: 'Add conda-forge-ci-setup=2'
 
   - script: |
-      source activate base
+      set -x -e
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
       echo "Configuring conda."
 
       setup_conda_rc ./ ./recipe ./.ci_support/${CONFIG}.yaml
@@ -52,22 +59,26 @@ jobs:
     displayName: Configure conda and conda-build
 
   - script: |
-      source activate base
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
       mangle_compiler ./ ./recipe ./.ci_support/${CONFIG}.yaml
     displayName: Mangle compiler
 
   - script: |
-      source activate base
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
       make_build_number ./ ./recipe ./.ci_support/${CONFIG}.yaml
     displayName: Generate build number clobber file
 
   - script: |
-      source activate base
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
       conda build ./recipe -m ./.ci_support/${CONFIG}.yaml --clobber-file ./.ci_support/clobber_${CONFIG}.yaml
     displayName: Build recipe
 
   - script: |
-      source activate base
+      export PATH=$(Build.StagingDirectory)/miniconda/bin:$PATH
+      set -x -e
       upload_package ./ ./recipe ./.ci_support/${CONFIG}.yaml
     displayName: Upload recipe
     env:
