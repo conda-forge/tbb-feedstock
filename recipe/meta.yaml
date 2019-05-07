@@ -1,4 +1,4 @@
-{% set version = "2019.5" %}
+{% set version = "2019.6" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -25,7 +25,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 2ea82d74dec50e18075b4982b8d360f8bd2bf2950f38e2db483aef82e0047444
+  sha256: 2ba197b3964fce8a84429dd15b75eba7434cb89afc54f86d5ee6f726fdbe97fd
 
 build:
   number: 0
