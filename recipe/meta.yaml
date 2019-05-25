@@ -64,20 +64,20 @@ outputs:
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
         - make                                           # [unix]
+        - cmake
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       requires:
         - {{ compiler('cxx') }}
         - make                                           # [unix]
+        - cmake >=3.13
       source_files:
         - examples/test_all/fibonacci
       commands:
-        - cd examples\test_all\fibonacci                 # [win]
-        - set INCLUDE=%INCLUDE%;%LIBRARY_INC%            # [win]
-        - set LIB=%LIB%;%LIBRARY_LIB%                    # [win]
-        - nmake /f Makefile.windows                      # [win]
-        - make -C examples/test_all/fibonacci CXXFLAGS="$CPPFLAGS $CXXFLAGS $LDFLAGS" TBBROOT=$PREFIX  # [unix]
+        - cmake -S examples/test_all/fibonacci -B fibonacci_build        # [unix]
+        - cmake -S examples/test_all/fibonacci -B fibonacci_build -A x64 # [win]
+        - cmake --build fibonacci_build
 
   - name: tbb4py
     build:
