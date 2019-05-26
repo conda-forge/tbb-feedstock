@@ -75,8 +75,7 @@ outputs:
       source_files:
         - examples/test_all/fibonacci
       commands:
-        - cmake -S examples/test_all/fibonacci -B fibonacci_build        # [unix]
-        - cmake -S examples/test_all/fibonacci -B fibonacci_build -A x64 # [win]
+        - cmake -S examples/test_all/fibonacci -B fibonacci_build
         - cmake --build fibonacci_build
 
   - name: tbb4py
