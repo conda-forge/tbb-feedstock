@@ -1,4 +1,4 @@
-{% set version = "2019.6" %}
+{% set version = "2019.7" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -25,7 +25,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 2ba197b3964fce8a84429dd15b75eba7434cb89afc54f86d5ee6f726fdbe97fd
+  sha256: 4204a93f4c0fd989fb6f79acae74feb02ee39725c93968773d9b6efeb75c7a6a
 
 build:
   number: 0
@@ -64,20 +64,20 @@ outputs:
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
         - make                                           # [unix]
+        - cmake
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       requires:
         - {{ compiler('cxx') }}
         - make                                           # [unix]
+        - cmake >=3.13
       source_files:
         - examples/test_all/fibonacci
       commands:
-        - cd examples\test_all\fibonacci                 # [win]
-        - set INCLUDE=%INCLUDE%;%LIBRARY_INC%            # [win]
-        - set LIB=%LIB%;%LIBRARY_LIB%                    # [win]
-        - nmake /f Makefile.windows                      # [win]
-        - make -C examples/test_all/fibonacci CXXFLAGS="$CPPFLAGS $CXXFLAGS $LDFLAGS" TBBROOT=$PREFIX  # [unix]
+        - cmake -S examples/test_all/fibonacci -B fibonacci_build         # [unix]
+        - cmake -S examples/test_all/fibonacci -B fibonacci_build -A x64  # [win]
+        - cmake --build fibonacci_build
 
   - name: tbb4py
     build:
