@@ -24,7 +24,7 @@ package:
 
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
-  url: https://github.com/01org/tbb/archive/{{ vtag }}.tar.gz
+  url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
   sha256: 7b1fd8caea14be72ae4175896510bf99c809cd7031306a1917565e6de7382fba
 
 build:
@@ -78,7 +78,7 @@ outputs:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
         - cmake -S examples/test_all/fibonacci -B test-bld
         - cmake --build test-bld
-        - cmake -E env test-bld/fibonacci
+        - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
     build:
