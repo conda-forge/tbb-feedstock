@@ -75,10 +75,10 @@ outputs:
       source_files:
         - examples/test_all/fibonacci
       commands:
-        - cmake -S examples/test_all/fibonacci -B bld    # [unix]
-        - cmake -S examples/test_all/fibonacci -B bld -G "NMake Makefiles"  # [win]
-        - cmake --build bld
-        - cd bld && fibonacci
+        - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
+        - cmake -S examples/test_all/fibonacci -B bldf
+        - cmake --build bldf
+        - cmake -E chdir bldf fibonacci
 
   - name: tbb4py
     build:
