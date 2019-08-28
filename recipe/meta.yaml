@@ -76,9 +76,9 @@ outputs:
         - examples/test_all/fibonacci
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -S examples/test_all/fibonacci -B bldf
-        - cmake --build bldf
-        - cmake -E chdir bldf fibonacci
+        - cmake -S examples/test_all/fibonacci -B test-bld
+        - cmake --build test-bld
+        - cmake -E env test-bld/fibonacci
 
   - name: tbb4py
     build:
