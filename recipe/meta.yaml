@@ -29,6 +29,7 @@ source:
 
 build:
   number: 0
+  skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
 
