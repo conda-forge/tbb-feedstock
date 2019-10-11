@@ -23,10 +23,10 @@ Current build status
       </a>
     </td>
   </tr><tr>
-    <td>Appveyor</td>
+    <td>Drone</td>
     <td>
-      <a href="https://ci.appveyor.com/project/conda-forge/tbb-feedstock/branch/master">
-        <img alt="windows" src="https://img.shields.io/appveyor/ci/conda-forge/tbb-feedstock/master.svg?label=Windows">
+      <a href="https://cloud.drone.io/conda-forge/tbb-feedstock">
+        <img alt="linux" src="https://img.shields.io/drone/build/conda-forge/master.svg?label=Linux">
       </a>
     </td>
   </tr>
@@ -68,13 +68,6 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=1991&branchName=master">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/tbb-feedstock?branchName=master&jobName=osx&configuration=osx_" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_cxx_compilervs2008</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=1991&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/tbb-feedstock?branchName=master&jobName=win&configuration=win_cxx_compilervs2008" alt="variant">
                 </a>
               </td>
             </tr><tr>
