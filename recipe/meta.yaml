@@ -1,4 +1,4 @@
-{% set version = "2019.9" %}
+{% set version = "2020.0" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -25,10 +25,10 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 15652f5328cf00c576f065e5cd3eaf3317422fe82afb67a9bcec0dc065bd2abe
+  sha256: db80f4f7abb95c2d08fe64abdc0a9250903e4c725f1c667ac517450de426023a
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
