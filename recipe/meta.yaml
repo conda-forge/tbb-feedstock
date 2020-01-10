@@ -7,7 +7,7 @@
 {% else %}  # have to take into account for sake of the bot
 {%  set vtag = "malformed_" + version %}
 {% endif %}
-{% set vinterface = (year-2009)*1000 + 100 + update %}  # just guess, does not fit the previous versions before 2020
+{% set vinterface = 11100 + update %}  # just guess for 2020 series of updates
 
 {% set winfl = '--make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}
 # overriding -MD flag for issue #36
