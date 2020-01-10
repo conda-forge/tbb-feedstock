@@ -3,7 +3,7 @@
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
 {% if version.split('.').__len__() == 2 %}
-{%  set vtag = "v%d.%d" % (year, update) %}
+{%  set vtag = "v%d.%d" % (year, update) %}  # since 2020
 {% else %}  # have to take into account for sake of the bot
 {%  set vtag = "malformed_" + version %}
 {% endif %}
