@@ -42,7 +42,7 @@ test:
   commands:
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'tbb.dll']           ['TBB_runtime_interface_version']()"  # [win]
+    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb.dll'] ['TBB_runtime_interface_version']()"  # [win]
 
 outputs:
   - name: tbb
