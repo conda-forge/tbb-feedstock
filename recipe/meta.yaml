@@ -1,4 +1,4 @@
-{% set version = "2020.0" %}
+{% set version = "2020.1" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -21,10 +21,10 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 8eed2377ac62e6ac10af5a8303ce861e4525ffe491a061b48e8fe094fc741ce9
+  sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
@@ -74,7 +74,7 @@ outputs:
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
         - cmake -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld
+        - cmake --build test-bld --config release
         - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
