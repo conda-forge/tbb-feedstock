@@ -1,17 +1,13 @@
-{% set version = "2019.9" %}
+{% set version = "2020.1" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
 {% if version.split('.').__len__() == 2 %}
-{%  if update == 0 %}
-{%   set vtag = "%d" % year %}
-{%  else %}
-{%   set vtag = "%d_U%d" % (year, update) %}
-{%  endif %}
+{%  set vtag = "v%d.%d" % (year, update) %}  # since 2020
 {% else %}  # have to take into account for sake of the bot
 {%  set vtag = "malformed_" + version %}
 {% endif %}
-{% set vinterface = (year-2008)*1000 + update %}  # just guess, does not fit the previous versions before 2018
+{% set vinterface = 11100 + update %}  # just guess for 2020 series of updates
 
 {% set winfl = '--make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}
 # overriding -MD flag for issue #36
@@ -25,10 +21,10 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 15652f5328cf00c576f065e5cd3eaf3317422fe82afb67a9bcec0dc065bd2abe
+  sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
 
 build:
-  number: 1
+  number: 0
   skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
@@ -46,7 +42,7 @@ test:
   commands:
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'tbb.dll']           ['TBB_runtime_interface_version']()"  # [win]
+    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb.dll'] ['TBB_runtime_interface_version']()"  # [win]
 
 outputs:
   - name: tbb
@@ -78,7 +74,7 @@ outputs:
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
         - cmake -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld
+        - cmake --build test-bld --config release
         - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
