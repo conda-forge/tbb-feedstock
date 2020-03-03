@@ -24,7 +24,7 @@ source:
   sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
@@ -73,8 +73,8 @@ outputs:
         - examples/test_all/fibonacci
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld --config release
+        - cmake -S examples/test_all/fibonacci -B test-bld -DCMAKE_BUILD_TYPE=Release
+        - cmake --build test-bld
         - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
