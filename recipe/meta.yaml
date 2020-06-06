@@ -24,8 +24,7 @@ source:
   sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
 
 build:
-  number: 0
-  skip: true  # [win and py2k]
+  number: 1
   script_env:
     - OS    # [win]
 
@@ -47,11 +46,7 @@ test:
 outputs:
   - name: tbb
     build:
-      script: {{ build }} --install-libs
-
-  - name: tbb-devel
-    build:
-      script: {{ build }} --no-rebuild --install-devel --install-docs
+      script: {{ build }} --install-libs --install-devel
       run_exports:
         # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
         - {{ pin_subpackage('tbb', max_pin=None) }}
@@ -62,8 +57,6 @@ outputs:
         - m2w64-make                                     # [win]
         - make                                           # [unix]
         - cmake
-      run:
-        - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       requires:
         - {{ compiler('cxx') }}
@@ -88,7 +81,7 @@ outputs:
         - swig
       host:
         - python
-        - {{ pin_subpackage('tbb-devel', exact=True) }}
+        - {{ pin_subpackage('tbb', exact=True) }}
       run:
         - tbb >={{ version }}                            # while python module works with any compatible tbb...
         - python
@@ -110,7 +103,7 @@ outputs:
 
 about:
   home: http://www.threadingbuildingblocks.org
-  license: Apache 2.0
+  license: Apache-2.0
   license_file: LICENSE
   summary: High level abstract threading library
   dev_url: https://github.com/01org/tbb
