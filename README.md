@@ -3,7 +3,7 @@ About tbb
 
 Home: http://www.threadingbuildingblocks.org
 
-Package license: Apache 2.0
+Package license: Apache-2.0
 
 Feedstock license: BSD 3-Clause
 
@@ -26,7 +26,7 @@ Current build status
     <td>Drone</td>
     <td>
       <a href="https://cloud.drone.io/conda-forge/tbb-feedstock">
-        <img alt="linux" src="https://img.shields.io/drone/build/conda-forge/master.svg?label=Linux">
+        <img alt="linux" src="https://img.shields.io/drone/build/conda-forge/tbb-feedstock/master.svg?label=Linux">
       </a>
     </td>
   </tr>
@@ -71,10 +71,10 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>win_cxx_compilervs2015</td>
+              <td>win</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=1991&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/tbb-feedstock?branchName=master&jobName=win&configuration=win_cxx_compilervs2015" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/tbb-feedstock?branchName=master&jobName=win&configuration=win_" alt="variant">
                 </a>
               </td>
             </tr>
@@ -91,7 +91,6 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb-green.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-tbb--devel-green.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb4py-green.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) |
 
 Installing tbb
@@ -103,10 +102,10 @@ Installing `tbb` from the `conda-forge` channel can be achieved by adding `conda
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `tbb, tbb-devel, tbb4py` can be installed with:
+Once the `conda-forge` channel has been enabled, `tbb, tbb4py` can be installed with:
 
 ```
-conda install tbb tbb-devel tbb4py
+conda install tbb tbb4py
 ```
 
 It is possible to list all of the versions of `tbb` available on your platform with:
