@@ -25,7 +25,6 @@ source:
 
 build:
   number: 0
-  skip: true  # [win and py2k]
   script_env:
     - OS    # [win]
 
@@ -110,7 +109,7 @@ outputs:
 
 about:
   home: http://www.threadingbuildingblocks.org
-  license: Apache 2.0
+  license: Apache-2.0
   license_file: LICENSE
   summary: High level abstract threading library
   dev_url: https://github.com/01org/tbb
