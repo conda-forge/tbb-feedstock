@@ -24,7 +24,7 @@ source:
   sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
 
 build:
-  number: 0
+  number: 1
   script_env:
     - OS    # [win]
 
