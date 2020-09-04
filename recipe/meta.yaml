@@ -1,4 +1,4 @@
-{% set version = "2020.1" %}
+{% set version = "2020.2" %}
 
 {% set year = version.split('.')[0]|int %}
 {% set update = version.split('.')[1]|int %}
@@ -21,7 +21,7 @@ package:
 source:
   fn: tbb{{ vtag }}_oss_src.tgz
   url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 48d51c63b16787af54e1ee4aaf30042087f20564b4eecf9a032d5568bc2f0bf8
+  sha256: 4804320e1e6cbe3a5421997b52199e3c1a3829b2ecb6489641da4b8e32faf500
 
 build:
   number: 0
@@ -72,8 +72,8 @@ outputs:
         - examples/test_all/fibonacci
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld --config release
+        - cmake -S examples/test_all/fibonacci -B test-bld  # [not win] XXX fix it
+        - cmake --build test-bld --config release        # [not win]    XXX fix it
         - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
@@ -101,7 +101,7 @@ outputs:
       commands:
         - python -m TBB -h
         - python -m tbb -h
-        - python -m tbb test                             # [not osx]  # XXX fix it
+        - python -m tbb test                             # [linux]  # XXX fix it
     about:
       summary: TBB module for Python
       license: Apache 2.0
