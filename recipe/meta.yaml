@@ -73,7 +73,7 @@ outputs:
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
         - cmake -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld --config release
+        - cmake --build test-bld --config release        # [not win]   XXX fix it
         - cmake -E env test-bld/fibonacci                # [not win or not py2k]
 
   - name: tbb4py
@@ -101,7 +101,7 @@ outputs:
       commands:
         - python -m TBB -h
         - python -m tbb -h
-        - python -m tbb test                             # [not osx]  # XXX fix it
+        - python -m tbb test                             # [linux]  # XXX fix it
     about:
       summary: TBB module for Python
       license: Apache 2.0
