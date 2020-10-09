@@ -5,11 +5,13 @@ Home: http://www.threadingbuildingblocks.org
 
 Package license: Apache-2.0
 
-Feedstock license: BSD-3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/blob/master/LICENSE.txt)
 
 Summary: High level abstract threading library
 
+Development: https://github.com/01org/tbb
 
+Documentation: https://software.intel.com/en-us/node/506039
 
 Current build status
 ====================
