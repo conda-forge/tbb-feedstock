@@ -30,14 +30,14 @@ build:
 
 requirements:
   build:
-    - python *
+    - python
     - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
     - make                                               # [unix]
 
 test:
   requires:
-    - python *               # any python version is ok for sake of testing of shared libraries
+    - python
   commands:
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
     - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
@@ -56,7 +56,7 @@ outputs:
         - {{ pin_subpackage('tbb', max_pin=None) }}
     requirements:
       build:
-        - python *
+        - python
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
         - make                                           # [unix]
