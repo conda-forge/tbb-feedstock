@@ -46,7 +46,9 @@ test:
 outputs:
   - name: tbb
     build:
-      script: {{ build }} --install-libs
+      script:
+        - export MAKEFLAGS="-j1"  # [osx]
+        - {{ build }} --install-libs
 
   - name: tbb-devel
     build:
