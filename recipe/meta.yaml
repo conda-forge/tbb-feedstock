@@ -12,7 +12,7 @@
 {% set winfl = '--make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}
 # overriding -MD flag for issue #36
 {% set build = 'python build/build.py --build-args="CXXFLAGS= CFLAGS=" '+winfl %}    # [win]
-{% set build = 'python build/build.py --build-args="stdver=c++11 runtime=conda"' %}  # [unix]
+{% set build = 'arch="${ARCH}" python build/build.py --build-args="stdver=c++11 runtime=conda"' %}  # [unix]
 
 package:
   name: tbb
