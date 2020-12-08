@@ -68,16 +68,16 @@ outputs:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       requires:
-        - {{ compiler('cxx') }}                          # [unix]
+        - {{ compiler('cxx') }}
         - make                                           # [unix]
         - cmake >=3.13
       source_files:
         - examples/test_all/fibonacci
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -S examples/test_all/fibonacci -B test-bld  # [not win] XXX fix it
-        - cmake --build test-bld --config release        # [not win]    XXX fix it
-        - cmake -E env test-bld/fibonacci                # [not win and not py2k]
+        - cmake -S examples/test_all/fibonacci -B test-bld
+        - cmake --build test-bld --config release
+        - cmake -E env test-bld/fibonacci
 
   - name: tbb4py
     build:
