@@ -62,7 +62,7 @@ outputs:
         - python *
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
-        - make                                           # [unix]
+        - make                                           # [linux]
         - cmake
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
@@ -86,7 +86,7 @@ outputs:
       build:
         - {{ compiler('cxx') }}
         - m2w64-make                                     # [win]
-        - make                                           # [unix]
+        - make                                           # [linux]
         - swig
       host:
         - python
