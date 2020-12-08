@@ -36,7 +36,7 @@ requirements:
     - {{ compiler('cxx') }}
     - m2w64-make                                         # [win]
     # macOS hangs with conda's make for some reason
-    - make                                               # [unix and not osx]
+    - make                                               # [linux]
 
 test:
   requires:
