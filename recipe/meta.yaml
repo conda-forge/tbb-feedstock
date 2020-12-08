@@ -75,7 +75,7 @@ outputs:
         - examples/test_all/fibonacci
       commands:
         - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -S examples/test_all/fibonacci -B test-bld
+        - cmake -DCMAKE_BUILD_TYPE=Release -S examples/test_all/fibonacci -B test-bld
         - cmake --build test-bld --config release
         - cmake -E env test-bld/fibonacci
 
