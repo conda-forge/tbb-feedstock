@@ -1,92 +1,115 @@
-{% set version = "2020.2" %}
+{% set version = "2021.1.1" %}
 
-{% set year = version.split('.')[0]|int %}
-{% set update = version.split('.')[1]|int %}
-{% if version.split('.').__len__() == 2 %}
-{%  set vtag = "v%d.%d" % (year, update) %}  # since 2020
-{% else %}  # have to take into account for sake of the bot
-{%  set vtag = "malformed_" + version %}
-{% endif %}
-{% set vinterface = 11100 + update %}  # just guess for 2020 series of updates
+{% set vmajor = version.split('.')[0]|int %}
+{% set vminor = version.split('.')[1]|int %}
+{% set vpatch = version.split('.')[2]|int %}
+{% set vbinary = vmajor - 2009 %}
 
-{% set winfl = '--make-tool=mingw32-make --build-prefix=vc%VS_MAJOR%' %}
-# overriding -MD flag for issue #36
-{% set build = 'python build/build.py --build-args="CXXFLAGS= CFLAGS=" '+winfl %}    # [win]
-{% set build = 'arch="${ARCH}" python build/build.py --build-args="stdver=c++11 runtime=conda"' %}  # [unix]
+{% set vtag = "v%d.%d.%d" % (vmajor, vminor, vpatch) %}
+
+# Official patch version for the first release of 2021 is 1,
+# but internal patch version is 0, handle it for interface version.
+{% set vinterface = "%d" % (vbinary * 1000 + vminor * 10 + (vpatch if vmajor != 2021 or vminor != 1 else 0)) %}
+
+{% set install_prefix = '$PREFIX' %}   # [not win]
+{% set install_prefix = '%PREFIX%' %}  # [win]
 
 package:
   name: tbb
   version: {{ version }}
 
 source:
-  fn: tbb{{ vtag }}_oss_src.tgz
-  url: https://github.com/intel/tbb/archive/{{ vtag }}.tar.gz
-  sha256: 4804320e1e6cbe3a5421997b52199e3c1a3829b2ecb6489641da4b8e32faf500
+  fn: {{ vtag }}.tar.gz
+  url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
+  sha256: b182c73caaaabc44ddc5ad13113aca7e453af73c1690e4061f71dfe4935d74e8
+  patches:
+    - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
 
 build:
-  number: 3
-  script_env:
-    - OS    # [win]
+  number: 0
 
 requirements:
   build:
     - python *
     - {{ compiler('cxx') }}
-    - m2w64-make                                         # [win]
-    # macOS hangs with conda's make for some reason
-    - make                                               # [linux]
+    - ninja  # [not osx]
+    - make   # [osx]  # CMake inserts -MD key during the Ninja build that causes compilation errors
+    - cmake >=3.13
 
 test:
   requires:
     - python *               # any python version is ok for sake of testing of shared libraries
   commands:
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.2']       ['TBB_runtime_interface_version']()"  # [linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb.dll'] ['TBB_runtime_interface_version']()"  # [win]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.{{ vbinary }}.{{ vminor }}']       ['TBB_runtime_interface_version']()"  # [linux]
+    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.{{ vbinary }}.{{ vminor }}${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
+    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb{{ vbinary }}.dll'] ['TBB_runtime_interface_version']()"  # [win]
 
 outputs:
   - name: tbb
     build:
-      script: {{ build }} --install-libs
+      script:
+        - set CMAKE_GENERATOR=Ninja  # [not osx]
+        - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX={{ install_prefix }} -DTBB_TEST=OFF -S . -B build
+        - cmake --build build --parallel
+        - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
 
   - name: tbb-devel
     build:
-      script: {{ build }} --no-rebuild --install-devel --install-docs
+      script:
+        - set CMAKE_GENERATOR=Ninja  # [not osx]
+        - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX={{ install_prefix }} -DTBB_TEST=OFF -S . -B build
+        - cmake --build build --parallel
+        - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
       run_exports:
-        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb until oneTBB 2021
-        - tbb >={{ version }},<2021.0.0a0
+        - tbb >={{ version }}
     requirements:
       build:
         - python *
         - {{ compiler('cxx') }}
-        - m2w64-make                                     # [win]
-        - make                                           # [linux]
-        - cmake
+        - ninja  # [not osx]
+        - make   # [osx]  # CMake inserts -MD key during the Ninja build that causes compilation errors
+        - cmake >=3.13
+
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
       requires:
         - {{ compiler('cxx') }}
-        - make                                           # [unix]
+        - ninja  # [not osx]
+        - make   # [osx]  # CMake inserts -MD key during the Ninja build that causes compilation errors
         - cmake >=3.13
       source_files:
-        - examples/test_all/fibonacci
+        - cmake
+        - test
+        - CMakeLists.txt
+        - include  # some tests depend on files from include
+        - src      # some tests depend on files from src
       commands:
-        - set "CMAKE_GENERATOR=NMake Makefiles"          # [win]
-        - cmake -DCMAKE_BUILD_TYPE=Release -S examples/test_all/fibonacci -B test-bld
-        - cmake --build test-bld --config release
-        - cmake -E env test-bld/fibonacci
+        - set CMAKE_GENERATOR=Ninja  # [not osx]
+        - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test-build
+        - cmake --build test-build --parallel  # build tests
+        - cd test-build
+        - ctest --output-on-failure  # [not osx]
+        # Exclude tests with dependency on tbbmalloc_proxy since they don't work due to "-Wl,-dead_strip_dylibs"
+        # coming from LDFLAGS variable appearing in the environment after compiler installation.
+        # It is a test linkage problem, but not library problem.
+        - ctest -E "(test_malloc_atexit|test_malloc_overload)" --output-on-failure  # [osx]
 
   - name: tbb4py
     build:
-      script: {{ build }} --no-rebuild --install-python
+      script:
+        - set CMAKE_GENERATOR=Ninja  # [not osx]
+        - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX={{ install_prefix }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B build
+        - cmake --build build --target python_build --parallel
+        - cmake -DCOMPONENT=tbb4py -P build/cmake_install.cmake
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - {{ compiler('cxx') }}
-        - m2w64-make                                     # [win]
-        - make                                           # [linux]
+        - ninja  # [not osx]
+        - make   # [osx]  # CMake inserts -MD key during the Ninja build that causes compilation errors
+        - cmake >=3.13
         - swig
       host:
         - python
@@ -104,18 +127,20 @@ outputs:
       commands:
         - python -m TBB -h
         - python -m tbb -h
-        - python -m tbb test                             # [linux]  # XXX fix it
+        - python -m tbb test
     about:
       summary: TBB module for Python
       license: Apache 2.0
-      dev_url: https://github.com/01org/tbb
+      dev_url: https://github.com/oneapi-src/oneTBB
 
 about:
-  home: http://www.threadingbuildingblocks.org
+  home: https://github.com/oneapi-src/oneTBB
   license: Apache-2.0
-  license_file: LICENSE
+  license_file:
+    - LICENSE.txt
+    - third-party-programs.txt
   summary: High level abstract threading library
-  dev_url: https://github.com/01org/tbb
+  dev_url: https://github.com/oneapi-src/oneTBB
   doc_url: https://software.intel.com/en-us/node/506039
 
 extra:
