@@ -14,6 +14,11 @@
 {% set cmake_args = '$CMAKE_ARGS' %}                                                 # [not win]
 {% set cmake_args = '-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%' %}  # [win]
 
+# Use specific test list agreed with TBB team to cover core functionality on high level.
+# Execution of all tests is too heavy task for packaging CI.
+{% set tests = 'test_parallel_for test_parallel_reduce test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints' %}
+{% set ctest_regex = '^(%s)$' % (tests.replace(' ', '|')) %}
+
 package:
   name: tbb
   version: {{ version }}
@@ -86,14 +91,13 @@ outputs:
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja  # [win]
+        # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
+        # but do not build them from sources; real path to TBBConfig files is not required,
+        # because CMake will successfully find installed tested package.
         - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test-build
-        - cmake --build test-build --parallel  # build tests
+        - cmake --build test-build --target {{ tests }} --parallel  # build tests
         - cd test-build
-        - ctest --output-on-failure  # [not osx]
-        # Exclude tests with dependency on tbbmalloc_proxy since they don't work due to "-Wl,-dead_strip_dylibs"
-        # coming from LDFLAGS variable appearing in the environment after compiler installation.
-        # It is a test linkage problem, but not library problem.
-        - ctest -E "(test_malloc_atexit|test_malloc_overload)" --output-on-failure  # [osx]
+        - ctest -R '{{ctest_regex}}' --output-on-failure
 
   - name: tbb4py
     build:
