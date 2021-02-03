@@ -97,7 +97,7 @@ outputs:
         - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test-build
         - cmake --build test-build --target {{ tests }} --parallel  # build tests
         - cd test-build
-        - ctest -R '{{ctest_regex}}' --output-on-failure
+        - ctest -R "{{ ctest_regex }}" --output-on-failure
 
   - name: tbb4py
     build:
