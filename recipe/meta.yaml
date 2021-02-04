@@ -150,7 +150,7 @@ about:
     - third-party-programs.txt
   summary: High level abstract threading library
   dev_url: https://github.com/oneapi-src/oneTBB
-  doc_url: https://software.intel.com/en-us/node/506039
+  doc_url: https://software.intel.com/en-us/oneapi-tbb-documentation
 
 extra:
   recipe-maintainers:
