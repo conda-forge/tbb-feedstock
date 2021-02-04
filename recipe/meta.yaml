@@ -16,7 +16,7 @@
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
-{% set tests = 'test_parallel_for test_parallel_reduce test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints' %}
+{% set tests = 'test_parallel_for test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints' %}
 {% set ctest_regex = '^(%s)$' % (tests.replace(' ', '|')) %}
 
 {% set tbb4py_build_dir = 'build_$PKG_HASH' %}   # [not win]
@@ -108,7 +108,7 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
+        - cmake {{ cmake_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -DTBB_DIR=TRUE -S . -B {{ tbb4py_build_dir }}
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
     requirements:
