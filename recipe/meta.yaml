@@ -33,6 +33,7 @@ source:
   patches:
     - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
     - 0002-CMake-fix-tbb4py-installation.patch
+    - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
 
 build:
   number: 0
