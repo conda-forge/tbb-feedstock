@@ -108,7 +108,7 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -DTBB_DIR=TRUE -S . -B {{ tbb4py_build_dir }}
+        - cmake {{ cmake_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
     requirements:
