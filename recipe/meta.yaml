@@ -99,9 +99,9 @@ outputs:
         # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
-        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test-build
-        - cmake --build test-build --target {{ tests }} --parallel  # build tests
-        - cd test-build
+        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test_build
+        - cmake --build test_build --target {{ tests }} --parallel  # build tests
+        - cd test_build
         - ctest -R "{{ ctest_regex }}" --output-on-failure
 
   - name: tbb4py
