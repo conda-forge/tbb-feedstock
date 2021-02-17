@@ -1,7 +1,7 @@
 About tbb
 =========
 
-Home: http://www.threadingbuildingblocks.org
+Home: https://github.com/oneapi-src/oneTBB
 
 Package license: Apache-2.0
 
@@ -9,9 +9,9 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/b
 
 Summary: High level abstract threading library
 
-Development: https://github.com/01org/tbb
+Development: https://github.com/oneapi-src/oneTBB
 
-Documentation: https://software.intel.com/en-us/node/506039
+Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
 
 Current build status
 ====================
