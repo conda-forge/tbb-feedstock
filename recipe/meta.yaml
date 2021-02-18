@@ -24,9 +24,11 @@ source:
   sha256: 4804320e1e6cbe3a5421997b52199e3c1a3829b2ecb6489641da4b8e32faf500
 
 build:
-  number: 2
+  number: 3
   script_env:
     - OS    # [win]
+  run_exports:
+    - {{ pin_subpackage('tbb', max_pin='x') }}
 
 requirements:
   build:
@@ -53,8 +55,8 @@ outputs:
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
       run_exports:
-        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
-        - {{ pin_subpackage('tbb', max_pin=None) }}
+        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb until oneTBB 2021
+        - {{ pin_subpackage('tbb', max_pin="x") }}
     requirements:
       build:
         - python *
