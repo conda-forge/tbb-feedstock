@@ -28,7 +28,7 @@ build:
   script_env:
     - OS    # [win]
   run_exports:
-    - {{ pin_subpackage('tbb', max_pin='2020') }}
+    - {{ pin_subpackage('tbb', upper_bound='2021.0.0a0') }}
 
 requirements:
   build:
@@ -56,7 +56,7 @@ outputs:
       script: {{ build }} --no-rebuild --install-devel --install-docs
       run_exports:
         # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb until oneTBB 2021
-        - {{ pin_subpackage('tbb', max_pin="2020") }}
+        - {{ pin_subpackage('tbb', upper_bound='2021.0.0a0') }}
     requirements:
       build:
         - python *
