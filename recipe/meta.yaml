@@ -28,7 +28,7 @@ build:
   script_env:
     - OS    # [win]
   run_exports:
-    - {{ pin_subpackage('tbb', upper_bound='2021.0.0a0') }}
+    - {{ pin_compatible('tbb', upper_bound='2021.0.0a0') }}
 
 requirements:
   build:
