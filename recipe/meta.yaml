@@ -53,8 +53,8 @@ outputs:
     build:
       script: {{ build }} --no-rebuild --install-devel --install-docs
       run_exports:
-        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb
-        - {{ pin_subpackage('tbb', max_pin=None) }}
+        # excellent compatibility: https://abi-laboratory.pro/index.php?view=timeline&l=tbb until oneTBB 2021
+        - tbb >={{ version }},<2021.0.0a0
     requirements:
       build:
         - python *
@@ -122,3 +122,4 @@ extra:
   recipe-maintainers:
     - anton-malakhov
     - jschueller
+    - AlexVeprev
