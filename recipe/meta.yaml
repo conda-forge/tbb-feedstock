@@ -27,8 +27,6 @@ build:
   number: 3
   script_env:
     - OS    # [win]
-  run_exports:
-    - {{ pin_compatible('tbb', upper_bound='2021.0.0a0') }}
 
 requirements:
   build:
