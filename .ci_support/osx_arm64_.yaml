@@ -1,7 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '11.0'
 channel_sources:
-- conda-forge
+- conda-forge/label/rust_dev,conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -18,3 +18,5 @@ python:
 - 3.8.* *_cpython
 target_platform:
 - osx-arm64
+tbb:
+- '2020'
