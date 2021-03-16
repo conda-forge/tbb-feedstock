@@ -34,6 +34,7 @@ source:
     - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
     - 0002-CMake-fix-tbb4py-installation.patch
     - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
+    - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
 
 build:
   number: 0
