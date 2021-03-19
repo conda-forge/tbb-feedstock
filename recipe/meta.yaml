@@ -34,9 +34,10 @@ source:
     - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
     - 0002-CMake-fix-tbb4py-installation.patch
     - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
+    - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -44,7 +45,7 @@ requirements:
     - {{ compiler('cxx') }}
     - ninja  # [win]
     - make   # [not win]
-    - cmake >=3.13
+    - cmake
 
 test:
   requires:
@@ -87,7 +88,7 @@ outputs:
         - {{ compiler('cxx') }}
         - ninja  # [win]
         - make   # [not win]
-        - cmake >=3.13
+        - cmake
       source_files:
         - cmake
         - test
@@ -118,7 +119,7 @@ outputs:
         - {{ compiler('cxx') }}
         - ninja  # [win]
         - make   # [not win]
-        - cmake >=3.13
+        - cmake
         - swig
       host:
         - python
