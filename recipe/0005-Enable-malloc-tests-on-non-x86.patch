@@ -1,8 +1,8 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 21564260..b3a891f0 100644
+index ac38f996..98338bf2 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -506,7 +506,7 @@ if (MSVC AND CMAKE_VERSION VERSION_GREATER 3.13) # LINK_OPTIONS property first a
+@@ -484,7 +484,7 @@ if (MSVC AND CMAKE_VERSION VERSION_GREATER 3.13) # LINK_OPTIONS property first a
  endif()
 
  # TBB allocator tests
