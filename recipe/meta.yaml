@@ -35,6 +35,7 @@ source:
     - 0002-CMake-fix-tbb4py-installation.patch
     - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
     - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
+    - 0005-Enable-malloc-tests-on-non-x86.patch
 
 build:
   number: 0
