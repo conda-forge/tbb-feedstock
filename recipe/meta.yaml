@@ -12,7 +12,7 @@
 {% set vinterface = "%d" % (vbinary * 1000 + vminor * 10 + (vpatch if vmajor != 2021 or vminor != 1 else 0)) %}
 
 {% set cmake_args = "$CMAKE_ARGS" %}                                                 # [not win]
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
+{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
@@ -38,7 +38,7 @@ source:
     - 0005-Enable-malloc-tests-on-non-x86.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
