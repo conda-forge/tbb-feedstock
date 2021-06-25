@@ -36,9 +36,10 @@ source:
     - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
     - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
     - 0005-Enable-malloc-tests-on-non-x86.patch
+    - 0006-Fix-md-option-for-AppleClang.patch                 # [osx]
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
