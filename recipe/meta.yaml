@@ -39,7 +39,7 @@ source:
     - 0006-Fix-md-option-for-AppleClang.patch                 # [osx]
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
