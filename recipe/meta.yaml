@@ -1,4 +1,4 @@
-{% set version = "2021.2.0" %}
+{% set version = "2021.3.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -31,15 +31,10 @@ source:
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
   sha256: cee20b0a71d977416f3e3b4ec643ee4f38cedeb2a9ff015303431dd9d8d79854
   patches:
-    - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
-    - 0002-CMake-fix-tbb4py-installation.patch
-    - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
     - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
-    - 0005-Enable-malloc-tests-on-non-x86.patch
-    - 0006-Fix-md-option-for-AppleClang.patch                 # [osx]
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:

@@ -2,7 +2,7 @@ diff --git a/include/oneapi/tbb/detail/_config.h b/include/oneapi/tbb/detail/_co
 index adfa8c86..df7bbb1e 100644
 --- a/include/oneapi/tbb/detail/_config.h
 +++ b/include/oneapi/tbb/detail/_config.h
-@@ -387,7 +387,7 @@
+@@ -391,7 +391,7 @@
  // instantiation site, which is too late for suppression of the corresponding messages for internal
  // stuff.
  #if !defined(__INTEL_COMPILER) && (!defined(TBB_SUPPRESS_DEPRECATED_MESSAGES) || (TBB_SUPPRESS_DEPRECATED_MESSAGES == 0))
