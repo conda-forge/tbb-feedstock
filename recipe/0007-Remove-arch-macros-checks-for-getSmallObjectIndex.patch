@@ -5,7 +5,7 @@ index 48f72149..8040ec04 100644
 @@ -802,21 +802,15 @@ static inline unsigned int highestBitPos(unsigned int n)
      return pos;
  }
- 
+
 -
 -#if __TBB_x86_32 || __aarch32__
  unsigned int getSmallObjectIndex(unsigned int size)
@@ -25,6 +25,6 @@ index 48f72149..8040ec04 100644
      return result;
  }
 -#endif // __TBB_x86_32 ||  __aarch32__
- 
+
  /*
   * Depending on indexRequest, for a given size return either the index into the bin
