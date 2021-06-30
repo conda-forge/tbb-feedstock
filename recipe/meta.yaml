@@ -38,6 +38,7 @@ source:
   sha256: 8f616561603695bbb83871875d2c6051ea28f8187dbe59299961369904d1d49e
   patches:
     - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
+    - 0007-Remove-arch-macros-checks-for-getSmallObjectIndex.patch
 
 build:
   number: 0
