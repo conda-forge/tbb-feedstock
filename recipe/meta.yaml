@@ -1,4 +1,5 @@
-{% set version = "2021.2.0" %}
+{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
+{% set version = "2021.3.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -11,7 +12,7 @@
 # but internal patch version is 0, handle it for interface version.
 {% set vinterface = "%d" % (vbinary * 1000 + vminor * 10 + (vpatch if vmajor != 2021 or vminor != 1 else 0)) %}
 
-{% set cmake_args = "$CMAKE_ARGS" %}                                                 # [not win]
+{% set cmake_args = "$CMAKE_ARGS" %}  # [not win]
 {% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
@@ -19,7 +20,7 @@
 {% set tests = "test_parallel_for test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints" %}
 {% set ctest_regex = "^(%s)$" % (tests.replace(' ', '|')) %}
 
-{% set tbb4py_build_dir = "build_$PKG_HASH" %}   # [not win]
+{% set tbb4py_build_dir = "build_$PKG_HASH" %}  # [not win]
 {% set tbb4py_build_dir = "build_%PKG_HASH%" %}  # [win]
 
 package:
@@ -29,7 +30,7 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: cee20b0a71d977416f3e3b4ec643ee4f38cedeb2a9ff015303431dd9d8d79854
+  sha256: 8f616561603695bbb83871875d2c6051ea28f8187dbe59299961369904d1d49e
   patches:
     - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
     - 0002-CMake-fix-tbb4py-installation.patch
@@ -39,7 +40,7 @@ source:
     - 0006-Fix-md-option-for-AppleClang.patch                 # [osx]
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
