@@ -1,4 +1,4 @@
-{% set version = "2021.2.0" %}
+{% set version = "2021.3.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -11,8 +11,14 @@
 # but internal patch version is 0, handle it for interface version.
 {% set vinterface = "%d" % (vbinary * 1000 + vminor * 10 + (vpatch if vmajor != 2021 or vminor != 1 else 0)) %}
 
-{% set cmake_args = "$CMAKE_ARGS" %}                                                 # [not win]
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
+# Libraries on Windows are expected to be installed into LIBRARY_PREFIX.
+# tbb4py files should be installed into PREFIX.
+# See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
+# On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
+{% set cmake_args = "$CMAKE_ARGS" %}                                                         # [not win]
+{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
+{% set cmake_tbb4py_args = "$CMAKE_ARGS" %}                                                  # [not win]
+{% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}   # [win]
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
@@ -29,17 +35,13 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: cee20b0a71d977416f3e3b4ec643ee4f38cedeb2a9ff015303431dd9d8d79854
+  sha256: 8f616561603695bbb83871875d2c6051ea28f8187dbe59299961369904d1d49e
   patches:
-    - 0001-CMake-fix-Clang-compiler-detection-on-macOS.patch  # [osx]
-    - 0002-CMake-fix-tbb4py-installation.patch
-    - 0003-Fix-cross-build-for-arm64-on-macOS.patch           # [osx]
     - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
-    - 0005-Enable-malloc-tests-on-non-x86.patch
-    - 0006-Fix-md-option-for-AppleClang.patch                 # [osx]
+    - 0007-Remove-arch-macros-checks-for-getSmallObjectIndex.patch
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
@@ -111,7 +113,7 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
+        - cmake {{ cmake_tbb4py_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
     requirements:
