@@ -1,5 +1,3 @@
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
-{% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
 {% set version = "2021.4.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
@@ -38,9 +36,6 @@ source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
   sha256: 021796c7845e155e616f5ecda16daa606ebb4c6f90b996e5c08aebab7a8d3de3
-  patches:
-    - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
-    - 0007-Remove-arch-macros-checks-for-getSmallObjectIndex.patch
 
 build:
   number: 0
