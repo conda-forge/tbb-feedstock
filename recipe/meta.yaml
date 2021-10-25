@@ -1,4 +1,4 @@
-{% set version = "2021.3.0" %}
+{% set version = "2021.4.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -15,9 +15,9 @@
 # tbb4py files should be installed into PREFIX.
 # See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
-{% set cmake_args = "$CMAKE_ARGS" %}                                                         # [not win]
+{% set cmake_args = "$CMAKE_ARGS" %}  # [not win]
 {% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
-{% set cmake_tbb4py_args = "$CMAKE_ARGS" %}                                                  # [not win]
+{% set cmake_tbb4py_args = "$CMAKE_ARGS" %}  # [not win]
 {% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}   # [win]
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
@@ -25,7 +25,7 @@
 {% set tests = "test_parallel_for test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints" %}
 {% set ctest_regex = "^(%s)$" % (tests.replace(' ', '|')) %}
 
-{% set tbb4py_build_dir = "build_$PKG_HASH" %}   # [not win]
+{% set tbb4py_build_dir = "build_$PKG_HASH" %}  # [not win]
 {% set tbb4py_build_dir = "build_%PKG_HASH%" %}  # [win]
 
 package:
@@ -35,10 +35,7 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: 8f616561603695bbb83871875d2c6051ea28f8187dbe59299961369904d1d49e
-  patches:
-    - 0004-Fix-concurrent-vector-on-win.patch                 # [win]
-    - 0007-Remove-arch-macros-checks-for-getSmallObjectIndex.patch
+  sha256: 021796c7845e155e616f5ecda16daa606ebb4c6f90b996e5c08aebab7a8d3de3
 
 build:
   number: 0
