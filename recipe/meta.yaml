@@ -1,5 +1,3 @@
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
-{% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}  # [win]
 {% set version = "2021.5.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
@@ -17,8 +15,9 @@
 # tbb4py files should be installed into PREFIX.
 # See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
-{% set cmake_args = "$CMAKE_ARGS" %}  # [not win]
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
+# CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
+{% set cmake_args = "$CMAKE_ARGS -DCMAKE_PREFIX_PATH=$CONDA_PREFIX" %}  # [not win]
+{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% -DCMAKE_PREFIX_PATH=%CONDA_PREFIX%" %}  # [win]
 {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}  # [not win]
 {% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}   # [win]
 
@@ -49,6 +48,8 @@ requirements:
     - ninja  # [win]
     - make   # [not win]
     - cmake
+    - libhwloc
+    - pkg-config
 
 test:
   requires:
