@@ -23,7 +23,10 @@
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
-{% set tests = "test_parallel_for test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints" %}
+# test_malloc_compliance is temporary excluded from the list since it causes failures that likely appear due to test implementation or env misconfiguration.
+# oneTBB issue: https://github.com/oneapi-src/oneTBB/issues/700
+# Agreed with oneTBB developers that it is suitable approach since the product is fully tested on oneTBB side.
+{% set tests = "test_parallel_for test_tbb_header conformance_version test_flow_graph test_arena_constraints" %}
 {% set ctest_regex = "^(%s)$" % (tests.replace(' ', '|')) %}
 
 {% set tbb4py_build_dir = "build_$PKG_HASH" %}  # [not win]
@@ -37,8 +40,6 @@ source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
   sha256: e5b57537c741400cf6134b428fc1689a649d7d38d9bb9c1b6d64f092ea28178a
-  patches:
-    - debug.patch
 
 build:
   number: 0
