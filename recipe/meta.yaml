@@ -1,4 +1,4 @@
-{% set version = "2021.4.0" %}
+{% set version = "2021.5.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -15,6 +15,7 @@
 # tbb4py files should be installed into PREFIX.
 # See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
+# CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% set cmake_args = "$CMAKE_ARGS" %}  # [not win]
 {% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
 {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}  # [not win]
@@ -22,7 +23,10 @@
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
-{% set tests = "test_parallel_for test_tbb_header conformance_version test_malloc_compliance test_flow_graph test_arena_constraints" %}
+# test_malloc_compliance is temporary excluded from the list since it causes failures that likely appear due to test implementation or env misconfiguration.
+# oneTBB issue: https://github.com/oneapi-src/oneTBB/issues/700
+# Agreed with oneTBB developers that it is suitable approach since the product is fully tested on oneTBB side.
+{% set tests = "test_parallel_for test_tbb_header conformance_version test_flow_graph test_arena_constraints" %}
 {% set ctest_regex = "^(%s)$" % (tests.replace(' ', '|')) %}
 
 {% set tbb4py_build_dir = "build_$PKG_HASH" %}  # [not win]
@@ -35,10 +39,10 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: 021796c7845e155e616f5ecda16daa606ebb4c6f90b996e5c08aebab7a8d3de3
+  sha256: e5b57537c741400cf6134b428fc1689a649d7d38d9bb9c1b6d64f092ea28178a
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
