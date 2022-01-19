@@ -46,107 +46,18 @@ build:
 
 requirements:
   build:
-    - python *
-    - {{ compiler('cxx') }}
-    - ninja  # [win]
-    - make   # [not win]
+    - ninja
     - cmake
-
-test:
-  requires:
-    - python *               # any python version is ok for sake of testing of shared libraries
-  commands:
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.{{ vbinary }}.{{ vminor }}']       ['TBB_runtime_interface_version']()"  # [linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.{{ vbinary }}.{{ vminor }}${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb{{ vbinary }}.dll'] ['TBB_runtime_interface_version']()"  # [win]
+    - libhwloc
+    - pkg-config
 
 outputs:
-  - name: tbb
+  - name: hwloc-detection-debug
     build:
       script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
-        - cmake --build build --parallel
-        - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
-
-  - name: tbb-devel
-    build:
-      script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
-        - cmake --build build --parallel
-        - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
-      run_exports:
-        - tbb >={{ version }}
-    requirements:
-      build:
-        - python *
-        - {{ compiler('cxx') }}
-        - ninja  # [win]
-        - make   # [not win]
-        - cmake >=3.13
-
-      run:
-        - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
-    test:
-      requires:
-        - {{ compiler('cxx') }}
-        - ninja  # [win]
-        - make   # [not win]
-        - cmake
-      source_files:
-        - cmake
-        - test
-        - CMakeLists.txt
-        - include  # some tests depend on files from include
-        - src      # some tests depend on files from src
-      commands:
-        - set CMAKE_GENERATOR=Ninja  # [win]
-        # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
-        # but do not build them from sources; real path to TBBConfig files is not required,
-        # because CMake will successfully find installed tested package.
-        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test_build
-        - cmake --build test_build --target {{ tests }} --parallel  # build tests
-        - cd test_build
-        - ctest -R "{{ ctest_regex }}" --output-on-failure
-
-  - name: tbb4py
-    build:
-      script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
-        - cmake {{ cmake_tbb4py_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
-        - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
-        - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
-    requirements:
-      build:
-        - python                                 # [build_platform != target_platform]
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - {{ compiler('cxx') }}
-        - ninja  # [win]
-        - make   # [not win]
-        - cmake
-        - swig
-      host:
-        - python
-        - {{ pin_subpackage('tbb-devel', exact=True) }}
-      run:
-        - tbb >={{ version }}                            # while python module works with any compatible tbb...
-        - python
-    test:
-      requires:
-        - python
-        - {{ pin_subpackage('tbb', exact=True) }}        # we want to test with this specific tbb package
-      imports:
-        - tbb
-        - TBB
-      commands:
-        - python -m TBB -h
-        - python -m tbb -h
-        - python -m tbb test
-    about:
-      summary: TBB module for Python
-      license: Apache 2.0
-      dev_url: https://github.com/oneapi-src/oneTBB
+        - dir %CONDA_PREFIX%\Library\lib\  # [win]
+        - ls ${CONDA_PREFIX}/lib  # [not win]
+        - cmake -G Ninja .
 
 about:
   home: https://github.com/oneapi-src/oneTBB
