@@ -52,14 +52,6 @@ requirements:
     - make   # [not win]
     - cmake
 
-test:
-  requires:
-    - python *               # any python version is ok for sake of testing of shared libraries
-  commands:
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.{{ vbinary }}.{{ vminor }}']       ['TBB_runtime_interface_version']()"  # [linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.{{ vbinary }}.{{ vminor }}${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb{{ vbinary }}.dll'] ['TBB_runtime_interface_version']()"  # [win]
-
 outputs:
   - name: tbb
     build:
@@ -68,6 +60,16 @@ outputs:
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+    test:
+      requires:
+        # any python version is ok for sake of testing of shared libraries
+        - python *
+      commands:
+        {% set libname = "libtbb.so." ~ vbinary ~ "." ~ vminor %}          # [linux]
+        {% set libname = "libtbb." ~ vbinary ~ "." ~ vminor ~ ".dylib" %}  # [osx]
+        {% set libname = "tbb" ~ vbinary ~ ".dll" %}                       # [win]
+        {% set win_extra = "os.add_dll_directory(os.environ['LIBRARY_BIN']); " if win else "" %}
+        - python -c "import ctypes, os; {{ win_extra }} assert {{ vinterface }} == ctypes.cdll[r'{{ libname }}']['TBB_runtime_interface_version']()"
 
   - name: tbb-devel
     build:
