@@ -61,6 +61,7 @@ outputs:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
         # unset option that ninja complains about
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
@@ -80,6 +81,7 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
@@ -110,6 +112,7 @@ outputs:
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
@@ -123,6 +126,7 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_tbb4py_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
