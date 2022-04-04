@@ -16,10 +16,13 @@
 # See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
-{% set cmake_args = "$CMAKE_ARGS" %}  # [not win]
-{% set cmake_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}  # [win]
-{% set cmake_tbb4py_args = "$CMAKE_ARGS" %}  # [not win]
-{% set cmake_tbb4py_args = "-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}   # [win]
+{% if win %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
+    {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
+{% else %}
+    {% set cmake_args = "$CMAKE_ARGS" %}
+    {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
+{% endif %}
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
@@ -42,7 +45,7 @@ source:
   sha256: e5b57537c741400cf6134b428fc1689a649d7d38d9bb9c1b6d64f092ea28178a
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -52,27 +55,34 @@ requirements:
     - make   # [not win]
     - cmake
 
-test:
-  requires:
-    - python *               # any python version is ok for sake of testing of shared libraries
-  commands:
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.so.{{ vbinary }}.{{ vminor }}']       ['TBB_runtime_interface_version']()"  # [linux]
-    - python -c "import ctypes; assert {{ vinterface }} == ctypes.cdll[r'libtbb.{{ vbinary }}.{{ vminor }}${SHLIB_EXT}']['TBB_runtime_interface_version']()"  # [unix and not linux]
-    - python -c "import ctypes, os; os.add_dll_directory(os.environ['LIBRARY_BIN']); assert {{ vinterface }} == ctypes.cdll[r'tbb{{ vbinary }}.dll'] ['TBB_runtime_interface_version']()"  # [win]
-
 outputs:
   - name: tbb
     build:
       script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        # unset option that ninja complains about
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+    test:
+      requires:
+        # any python version is ok for sake of testing of shared libraries
+        - python *
+      commands:
+        {% set libname = "libtbb.so." ~ vbinary ~ "." ~ vminor %}          # [linux]
+        {% set libname = "libtbb." ~ vbinary ~ "." ~ vminor ~ ".dylib" %}  # [osx]
+        {% set libname = "tbb" ~ vbinary ~ ".dll" %}                       # [win]
+        {% set win_extra = "os.add_dll_directory(os.environ['LIBRARY_BIN']); " if win else "" %}
+        - python -c "import ctypes, os; {{ win_extra }} assert {{ vinterface }} == ctypes.cdll[r'{{ libname }}']['TBB_runtime_interface_version']()"
 
   - name: tbb-devel
     build:
       script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
@@ -101,7 +111,9 @@ outputs:
         - include  # some tests depend on files from include
         - src      # some tests depend on files from src
       commands:
-        - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
@@ -113,7 +125,9 @@ outputs:
   - name: tbb4py
     build:
       script:
-        - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_tbb4py_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
