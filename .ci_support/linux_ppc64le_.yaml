@@ -24,4 +24,4 @@ python:
 target_platform:
 - linux-ppc64le
 tbb:
-- '2020'
+- '2021'
