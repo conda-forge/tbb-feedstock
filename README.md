@@ -212,5 +212,6 @@ Feedstock Maintainers
 
 * [@AlexVeprev](https://github.com/AlexVeprev/)
 * [@anton-malakhov](https://github.com/anton-malakhov/)
+* [@isaevil](https://github.com/isaevil/)
 * [@jschueller](https://github.com/jschueller/)
 
