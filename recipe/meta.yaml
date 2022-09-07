@@ -17,10 +17,10 @@
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% if win %}
-    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" -DCMAKE_PREFIX_PATH=%CONDA_PREFIX%" %}
     {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
 {% else %}
-    {% set cmake_args = "$CMAKE_ARGS" %}
+    {% set cmake_args = "$CMAKE_ARGS" -DCMAKE_PREFIX_PATH=%CONDA_PREFIX%" %}
     {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
 {% endif %}
 
