@@ -50,7 +50,8 @@ build:
 requirements:
   build:
     - {{ compiler('cxx') }}
-    - ninja
+    - ninja # [win]
+    - make # [not win]
     - cmake
     - pkg-config
     - libhwloc
@@ -61,10 +62,10 @@ outputs:
       script:
         - dir %CONDA_PREFIX%\Library\lib\  # [win]
         - ls ${CONDA_PREFIX}/lib  # [not win]
-        - set CMAKE_GENERATOR=Ninja
+        - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
-        - set CMAKE_GENERATOR_TOOLSET=
-        - set CMAKE_GENERATOR_PLATFORM=
+        - set CMAKE_GENERATOR_TOOLSET=  # [win]
+        - set CMAKE_GENERATOR_PLATFORM= # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
