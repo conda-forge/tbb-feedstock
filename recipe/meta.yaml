@@ -54,6 +54,8 @@ requirements:
     - ninja  # [win]
     - make   # [not win]
     - cmake
+    - pkg-config
+    - libhwloc
 
 outputs:
   - name: tbb
