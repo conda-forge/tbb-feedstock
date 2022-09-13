@@ -60,10 +60,8 @@ outputs:
   - name: tbb
     build:
       script:
-        - echo %CONDA_PREFIX% # [win]
-        - echo ${CONDA_PREFIX} # [not win]
-        - dir %CONDA_PREFIX%\Library\lib\  # [win]
-        - ls ${CONDA_PREFIX}/lib  # [not win]
+        - echo $LD_LIBRARY_PATH # [linux]
+        - echo %PATH% # [win]
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=  # [win]
