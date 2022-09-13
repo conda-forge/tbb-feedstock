@@ -60,7 +60,7 @@ outputs:
   - name: tbb
     build:
       script:
-        - echo $LD_LIBRARY_PATH # [linux]
+        - cat $CONDA_PREFIX/lib/pkgconfig/hwloc.pc # [linux]
         - echo %PATH% # [win]
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
