@@ -93,8 +93,6 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb-green.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-tbb--devel-green.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-tbb4py-green.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) |
 
 Installing tbb
 ==============
@@ -106,16 +104,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `tbb, tbb-devel, tbb4py` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `tbb` can be installed with `conda`:
 
 ```
-conda install tbb tbb-devel tbb4py
+conda install tbb
 ```
 
 or with `mamba`:
 
 ```
-mamba install tbb tbb-devel tbb4py
+mamba install tbb
 ```
 
 It is possible to list all of the versions of `tbb` available on your platform with `conda`:
