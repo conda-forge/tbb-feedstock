@@ -17,9 +17,11 @@
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% if win %}
-    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
+    {% set hwloc_args = "-DCMAKE_HWLOC_2_5_LIBRARY_PATH=%LIBRARY_PREFIX%\\lib\\hwloc.dll.lib -DCMAKE_HWLOC_2_5_INCLUDE_PATH=%LIBRARY_PREFIX%\\include -DCMAKE_HWLOC_2_5_DLL_PATH=%LIBRARY_PREFIX%\\bin\\hwloc-15.dll" %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% " %}
     {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
 {% else %}
+    {% set hwloc_args = "" %}
     {% set cmake_args = "$CMAKE_ARGS" %}
     {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
 {% endif %}
@@ -61,19 +63,12 @@ outputs:
   - name: tbb
     build:
       script:
-        # debug part
-        # - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig:$CONDA_PREFIX/lib/pkgconfig # [not win]
-        # - set UNIX_LIBRARY_PREFIX=%LIBRARY_PREFIX:\=/% # [win]
-        # - set PKG_CONFIG_PATH=%UNIX_LIBRARY_PREFIX%/lib/pkgconfig # [win]
-        # - echo $PKG_CONFIG_PATH # [not win]
-        # - echo %PKG_CONFIG_PATH% # [win]
-        - echo "Heeeeeey" && ls $PREFIX/lib/pkgconfig # [not win]
         # actual build part
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=  # [win]
         - set CMAKE_GENERATOR_PLATFORM= # [win]
-        - cmake {{ cmake_args }} -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DTBB_TEST=OFF -S . -B build
+        - cmake {{ cmake_args }} {{ hwloc_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
 
