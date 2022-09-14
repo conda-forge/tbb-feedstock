@@ -54,19 +54,23 @@ requirements:
     - make # [not win]
     - cmake
     - pkg-config
+  host:
     - libhwloc
 
 outputs:
   - name: tbb
     build:
       script:
+        # debug part
         - cat $CONDA_PREFIX/lib/pkgconfig/hwloc.pc # [linux]
         - echo %PATH% # [win]
-        - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig # [not win]
+        - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig:$CONDA_PREFIX/lib/pkgconfig # [not win]
         - set UNIX_LIBRARY_PREFIX=%LIBRARY_PREFIX:\=/% # [win]
         - set PKG_CONFIG_PATH=%UNIX_LIBRARY_PREFIX%/lib/pkgconfig # [win]
         - echo $PKG_CONFIG_PATH # [not win]
+        - ls $PREFIX/lib/pkgconfig # [no win]
         - echo %PKG_CONFIG_PATH% # [win]
+        # actual build part
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=  # [win]
