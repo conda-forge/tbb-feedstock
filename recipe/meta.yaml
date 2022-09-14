@@ -68,7 +68,7 @@ outputs:
         - set UNIX_LIBRARY_PREFIX=%LIBRARY_PREFIX:\=/% # [win]
         - set PKG_CONFIG_PATH=%UNIX_LIBRARY_PREFIX%/lib/pkgconfig # [win]
         - echo $PKG_CONFIG_PATH # [not win]
-        - ls $PREFIX/lib/pkgconfig # [no win]
+        - ls $PREFIX/lib/pkgconfig # [not win]
         - echo %PKG_CONFIG_PATH% # [win]
         # actual build part
         - set CMAKE_GENERATOR=Ninja # [win]
