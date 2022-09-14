@@ -17,10 +17,10 @@
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% if win %}
-    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% -DCMAKE_PREFIX_PATH=%CONDA_PREFIX%" %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
     {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
 {% else %}
-    {% set cmake_args = "$CMAKE_ARGS -DCMAKE_PREFIX_PATH=$CONDA_PREFIX" %}
+    {% set cmake_args = "$CMAKE_ARGS" %}
     {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
 {% endif %}
 
@@ -62,6 +62,9 @@ outputs:
       script:
         - cat $CONDA_PREFIX/lib/pkgconfig/hwloc.pc # [linux]
         - echo %PATH% # [win]
+        - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig # [not win]
+        - set UNIX_LIBRARY_PREFIX=%LIBRARY_PREFIX:\=/% # [win]
+        - set PKG_CONFIG_PATH=%UNIX_LIBRARY_PREFIX%/lib/pkgconfig # [win]
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=  # [win]
