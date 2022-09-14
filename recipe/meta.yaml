@@ -17,9 +17,11 @@
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% if win %}
+    {% set hwloc_args = "-DCMAKE_HWLOC_2_5_LIBRARY_PATH=%LIBRARY_PREFIX%\\lib\\hwloc.dll.lib -DCMAKE_HWLOC_2_5_INCLUDE_PATH=%LIBRARY_PREFIX%\\include -DCMAKE_HWLOC_2_5_DLL_PATH=%LIBRARY_PREFIX%\\bin\\hwloc-15.dll" %}
     {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
     {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
 {% else %}
+    {% set hwloc_args = "" %}
     {% set cmake_args = "$CMAKE_ARGS" %}
     {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
 {% endif %}
@@ -55,6 +57,7 @@ requirements:
     - make   # [not win]
     - cmake
     - pkg-config
+  host:
     - libhwloc
 
 outputs:
@@ -65,7 +68,7 @@ outputs:
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
-        - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
+        - cmake {{ cmake_args }} {{ hwloc_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
     test:
@@ -85,7 +88,7 @@ outputs:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
-        - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
+        - cmake {{ cmake_args }} {{ hwloc_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
       run_exports:
