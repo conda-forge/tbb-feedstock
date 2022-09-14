@@ -65,6 +65,8 @@ outputs:
         - export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig # [not win]
         - set UNIX_LIBRARY_PREFIX=%LIBRARY_PREFIX:\=/% # [win]
         - set PKG_CONFIG_PATH=%UNIX_LIBRARY_PREFIX%/lib/pkgconfig # [win]
+        - echo $PKG_CONFIG_PATH # [not win]
+        - echo %PKG_CONFIG_PATH% # [win]
         - set CMAKE_GENERATOR=Ninja # [win]
         # unset option that ninja complains about
         - set CMAKE_GENERATOR_TOOLSET=  # [win]
