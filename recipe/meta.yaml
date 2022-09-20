@@ -51,12 +51,12 @@ requirements:
   build:
     - python *
     - {{ compiler('cxx') }}
-    - ninja  # [win]
-    - make   # [not win]
+    - ninja       # [win]
+    - make        # [not win]
     - cmake
-    - pkg-config
+    - pkg-config  # [not osx]
   host:
-    - libhwloc
+    - libhwloc    # [not osx]
 
 outputs:
   - name: tbb
@@ -98,9 +98,9 @@ outputs:
         - ninja  # [win]
         - make   # [not win]
         - cmake >=3.13
-        - pkg-config
+        - pkg-config  # [not osx]
       host:
-        - libhwloc
+        - libhwloc    # [not osx]
 
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
@@ -110,8 +110,8 @@ outputs:
         - ninja  # [win]
         - make   # [not win]
         - cmake
-        - pkg-config
-        - libhwloc
+        - pkg-config  # [not osx]
+        - libhwloc    # [not osx]
       source_files:
         - cmake
         - test
