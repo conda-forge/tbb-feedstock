@@ -110,6 +110,8 @@ outputs:
         - ninja  # [win]
         - make   # [not win]
         - cmake
+        - pkg-config
+        - libhwloc
       source_files:
         - cmake
         - test
