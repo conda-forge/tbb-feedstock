@@ -1,8 +1,16 @@
 diff --git a/python/tbb/test.py b/python/tbb/test.py
-index 7e02d788..c850137a 100644
+index 7e02d788..07928075 100644
 --- a/python/tbb/test.py
 +++ b/python/tbb/test.py
-@@ -82,6 +82,15 @@ def test(arg=None):
+@@ -1,6 +1,6 @@
+ #!/usr/bin/env python3
+ #
+-# Copyright (c) 2016-2021 Intel Corporation
++# Copyright (c) 2016-2022 Intel Corporation
+ #
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+@@ -82,6 +82,14 @@ def test(arg=None):
          say("[%d] Work done (%fms)." % (get_tid(), mseconds*10))
          return res
  
@@ -11,14 +19,13 @@ index 7e02d788..c850137a 100644
 +    def timeout_work(param):
 +        nonlocal spin_flag
 +        while spin_flag:
-+            # print(spin_flag)
 +            time.sleep(0.0001) # yield equivalent
 +        return str(param) if param != None else None
 +
      ### Test copy/pasted from multiprocessing
      pool = Pool(4)  # start worker threads
  
-@@ -105,11 +114,12 @@ def test(arg=None):
+@@ -105,11 +113,12 @@ def test(arg=None):
      assert next(it) == 4
  
      # Test apply_sync exceptions
@@ -32,7 +39,7 @@ index 7e02d788..c850137a 100644
      else:
          assert False, "Expected exception !"
      assert result.get() is None  # sleep() returns None
-@@ -118,29 +128,33 @@ def test(arg=None):
+@@ -118,29 +127,33 @@ def test(arg=None):
          say("Result ready: %s" % s)
  
      # Test imap()
@@ -70,7 +77,7 @@ index 7e02d788..c850137a 100644
      else:
          assert False, "Expected exception !"
      for i in result.get():
-@@ -150,11 +164,13 @@ def test(arg=None):
+@@ -150,11 +163,13 @@ def test(arg=None):
          say("Item2:", i)
  
      # Test imap_unordered_async()
