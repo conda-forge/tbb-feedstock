@@ -47,7 +47,7 @@ source:
     - 0008-Fix-tbb4py-sporadic-test-fails.patch
 
 build:
-  number: 4
+  number: 5
   ignore_run_exports:
     - libhwloc
 
@@ -95,6 +95,8 @@ outputs:
         - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
       run_exports:
         - tbb >={{ version }}
+      ignore_run_exports:
+        - libhwloc
     requirements:
       build:
         - python *
