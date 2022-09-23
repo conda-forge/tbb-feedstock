@@ -47,7 +47,7 @@ source:
     - 0008-Fix-tbb4py-sporadic-test-fails.patch
 
 build:
-  number: 3
+  number: 4
   ignore_run_exports:
     - libhwloc
 
