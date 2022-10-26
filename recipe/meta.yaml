@@ -118,6 +118,9 @@ outputs:
         - cmake
         - pkg-config  # [not osx]
         - libhwloc    # [not osx]
+        # When cross-compiling we need to get uname from coreutils so that
+        # CMAKE_SYSTEM_PROCESSOR is set to the correct value
+        - coreutils  # [build_platform != target_platform]
       source_files:
         - cmake
         - test
