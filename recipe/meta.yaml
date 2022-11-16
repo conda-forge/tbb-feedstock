@@ -1,4 +1,4 @@
-{% set version = "2021.6.0" %}
+{% set version = "2021.7.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -42,12 +42,12 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: 4897dd106d573e9dacda8509ca5af1a0e008755bf9c383ef6777ac490223031f
+  sha256: 2cae2a80cda7d45dc7c072e4295c675fff5ad8316691f26f40539f7e7e54c0cc
   patches:
     - 0008-Fix-tbb4py-sporadic-test-fails.patch
 
 build:
-  number: 1
+  number: 0
   ignore_run_exports:
     - libhwloc
 
