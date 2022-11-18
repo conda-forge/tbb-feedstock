@@ -9,3 +9,5 @@ provider:
   linux_ppc64le: azure
   win: azure
 test: native_and_emulated
+conda_build:
+  pkg_format: '2'
