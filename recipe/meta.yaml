@@ -101,7 +101,7 @@ outputs:
       run_exports:
         - tbb >={{ version }}
       ignore_run_exports:
-         - libhwloc
+        - libhwloc
     requirements:
       build:
         - python *
