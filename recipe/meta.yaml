@@ -47,9 +47,7 @@ source:
     - 0008-Fix-tbb4py-sporadic-test-fails.patch
 
 build:
-  number: 0
-  ignore_run_exports:
-    - libhwloc
+  number: 1
 
 requirements:
   build:
@@ -60,10 +58,12 @@ requirements:
     - cmake
     - pkg-config  # [not osx]
   host:
-    - libhwloc    # [not osx]
+    - libhwloc >=2.5  # [not osx]
 
 outputs:
   - name: tbb
+    about:
+      summary: TBB Libraries
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -73,6 +73,9 @@ outputs:
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+    requirements:
+       host:
+        - libhwloc >=2.5  # [not osx]
     test:
       requires:
         # any python version is ok for sake of testing of shared libraries
@@ -85,6 +88,8 @@ outputs:
         - python -c "import ctypes, os; {{ win_extra }} assert {{ vinterface }} == ctypes.cdll[r'{{ libname }}']['TBB_runtime_interface_version']()"
 
   - name: tbb-devel
+    about:
+      summary: TBB Development files
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -96,7 +101,7 @@ outputs:
       run_exports:
         - tbb >={{ version }}
       ignore_run_exports:
-        - libhwloc
+         - libhwloc
     requirements:
       build:
         - python *
@@ -107,7 +112,6 @@ outputs:
         - pkg-config  # [not osx]
       host:
         - libhwloc    # [not osx]
-
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
@@ -140,6 +144,8 @@ outputs:
         - ctest -R "{{ ctest_regex }}" --output-on-failure
 
   - name: tbb4py
+    about:
+      summary: TBB module for Python
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -174,10 +180,6 @@ outputs:
         - python -m TBB -h
         - python -m tbb -h
         - python -m tbb test
-    about:
-      summary: TBB module for Python
-      license: Apache 2.0
-      dev_url: https://github.com/oneapi-src/oneTBB
 
 about:
   home: https://github.com/oneapi-src/oneTBB
