@@ -3,6 +3,7 @@ About tbb-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/blob/main/LICENSE.txt)
 
+
 About tbb
 ---------
 
@@ -15,6 +16,7 @@ Summary: TBB Libraries
 Development: https://github.com/oneapi-src/oneTBB
 
 Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
+
 About tbb-devel
 ---------------
 
@@ -23,6 +25,7 @@ About tbb-devel
 Package license: 
 
 Summary: TBB Development files
+
 About tbb4py
 ------------
 
