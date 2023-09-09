@@ -47,7 +47,7 @@ source:
     - 0009-fix-unsupported-option-mac.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -64,6 +64,9 @@ outputs:
   - name: tbb
     about:
       summary: TBB Libraries
+      license_file:
+        - LICENSE.txt
+        - third-party-programs.txt
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -90,6 +93,9 @@ outputs:
   - name: tbb-devel
     about:
       summary: TBB Development files
+      license_file:
+        - LICENSE.txt
+        - third-party-programs.txt
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -146,6 +152,9 @@ outputs:
   - name: tbb4py
     about:
       summary: TBB module for Python
+      license_file:
+        - LICENSE.txt
+        - third-party-programs.txt
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
@@ -197,3 +206,4 @@ extra:
     - jschueller
     - AlexVeprev
     - isaevil
+    - ilya-lavrenov
