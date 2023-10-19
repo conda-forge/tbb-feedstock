@@ -156,6 +156,7 @@ outputs:
         - LICENSE.txt
         - third-party-programs.txt
     build:
+      skip: true  # [py>=312]
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
