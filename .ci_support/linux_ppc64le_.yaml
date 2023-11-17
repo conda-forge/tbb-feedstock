@@ -2,11 +2,6 @@ cdt_name:
 - cos7
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge/label/python_rc,conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -30,6 +25,3 @@ target_platform:
 - linux-ppc64le
 tbb:
 - '2021'
-zip_keys:
-- - python
-  - channel_sources
