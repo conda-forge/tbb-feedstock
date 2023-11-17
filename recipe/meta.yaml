@@ -43,8 +43,6 @@ source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
   sha256: 782ce0cab62df9ea125cdea253a50534862b563f1d85d4cda7ad4e77550ac363
-  patches:
-    - 0009-fix-unsupported-option-mac.patch
 
 build:
   number: 0
