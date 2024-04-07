@@ -45,12 +45,13 @@ source:
   sha256: 782ce0cab62df9ea125cdea253a50534862b563f1d85d4cda7ad4e77550ac363
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
     - python *
     - {{ compiler('cxx') }}
+    - {{ stdlib("c") }}
     - ninja       # [win]
     - make        # [not win]
     - cmake
@@ -110,6 +111,7 @@ outputs:
       build:
         - python *
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - ninja  # [win]
         - make   # [not win]
         - cmake >=3.13
@@ -167,6 +169,7 @@ outputs:
         - python                                 # [build_platform != target_platform]
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - ninja  # [win]
         - make   # [not win]
         - cmake
