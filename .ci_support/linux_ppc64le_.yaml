@@ -15,7 +15,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-ppc64le
 libhwloc:
-- 2.10.0
+- 2.11.0
 pin_run_as_build:
   python:
     min_pin: x.x
