@@ -136,6 +136,7 @@ outputs:
         - test
         - CMakeLists.txt
         - include  # some tests depend on files from include
+        - integration  # same
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja      # [win]
