@@ -1,4 +1,4 @@
-{% set version = "2021.12.0" %}
+{% set version = "2021.13.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -42,10 +42,10 @@ package:
 source:
   fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: c7bb7aa69c254d91b8f0041a71c5bcc3936acb64408a1719aec0b2b7639dd84f
+  sha256: 3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1
 
 build:
-  number: 4
+  number: 0
 
 requirements:
   build:
@@ -136,15 +136,16 @@ outputs:
         - test
         - CMakeLists.txt
         - include  # some tests depend on files from include
+        - integration  # same
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
-        # Setting TBB_DIR=TRUE is needed to use libraries from the tested package,
+        # Setting TBB_DIR=ON and TBB_FIND_PACKAGE=ON is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
-        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=TRUE -S . -B test_build
+        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=ON -DTBB_FIND_PACKAGE=ON -S . -B test_build
         - cmake --build test_build --target {{ tests }} --parallel  # build tests
         - cd test_build
         - ctest -R "{{ ctest_regex }}" --output-on-failure
