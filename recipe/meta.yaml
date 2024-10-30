@@ -1,11 +1,11 @@
-{% set version = "2021.13.0" %}
+{% set version = "2022.0.0.rc1" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
 {% set vpatch = version.split('.')[2]|int %}
 {% set vbinary = vmajor - 2009 %}
 
-{% set vtag = "v%d.%d.%d" % (vmajor, vminor, vpatch) %}
+{% set vtag = version.replace(".rc", "-rc") %}
 
 # Official patch version for the first release of 2021 is 1,
 # but internal patch version is 0, handle it for interface version.
@@ -41,8 +41,8 @@ package:
 
 source:
   fn: {{ vtag }}.tar.gz
-  url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: 3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1
+  url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{{ vtag }}.tar.gz
+  sha256: f1c487dfd6dce21296cee1c944836379847084e3979482435d0affd860775b7d
 
 build:
   number: 0
