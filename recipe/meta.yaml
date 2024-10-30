@@ -40,12 +40,11 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ vtag }}.tar.gz
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{{ vtag }}.tar.gz
   sha256: f1c487dfd6dce21296cee1c944836379847084e3979482435d0affd860775b7d
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
@@ -123,6 +122,7 @@ outputs:
     test:
       requires:
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - ninja  # [win]
         - make   # [not win]
         - cmake
