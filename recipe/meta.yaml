@@ -42,6 +42,8 @@ package:
 source:
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{{ vtag }}.tar.gz
   sha256: f1c487dfd6dce21296cee1c944836379847084e3979482435d0affd860775b7d
+  patches:
+    - patches/0010-fix-build-gcc-13.3.patch
 
 build:
   number: 0
@@ -146,10 +148,10 @@ outputs:
         # Setting TBB_DIR=ON and TBB_FIND_PACKAGE=ON is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
-        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=ON -DTBB_FIND_PACKAGE=ON -S . -B test_build  # [not linux]
-        - cmake --build test_build --target {{ tests }} --parallel  # [not linux]  # build tests
-        - cd test_build  # [not linux]
-        - ctest -R "{{ ctest_regex }}" --output-on-failure  # [not linux]
+        - cmake {{ cmake_args }} -DTBB_TEST=ON -DTBB_DIR=ON -DTBB_FIND_PACKAGE=ON -S . -B test_build
+        - cmake --build test_build --target {{ tests }} --parallel  # build tests
+        - cd test_build
+        - ctest -R "{{ ctest_regex }}" --output-on-failure
 
   - name: tbb4py
     about:
