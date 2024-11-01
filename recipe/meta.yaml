@@ -1,11 +1,11 @@
-{% set version = "2021.13.0" %}
+{% set version = "2022.0.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
 {% set vpatch = version.split('.')[2]|int %}
 {% set vbinary = vmajor - 2009 %}
 
-{% set vtag = "v%d.%d.%d" % (vmajor, vminor, vpatch) %}
+{% set vtag = "v" ~ version.replace(".rc", "-rc") %}
 
 # Official patch version for the first release of 2021 is 1,
 # but internal patch version is 0, handle it for interface version.
@@ -40,9 +40,10 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ vtag }}.tar.gz
-  url: https://github.com/oneapi-src/oneTBB/archive/{{ vtag }}.tar.gz
-  sha256: 3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1
+  url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
+  sha256: e8e89c9c345415b17b30a2db3095ba9d47647611662073f7fbf54ad48b7f3c2a
+  patches:
+    - patches/0010-fix-build-gcc-13.3.patch
 
 build:
   number: 0
@@ -123,6 +124,7 @@ outputs:
     test:
       requires:
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - ninja  # [win]
         - make   # [not win]
         - cmake
