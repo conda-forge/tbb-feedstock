@@ -2,22 +2,20 @@ MACOSX_DEPLOYMENT_TARGET:
 - '11.0'
 MACOSX_SDK_VERSION:
 - '11.0'
+ace:
+- 8.0.1
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
 - '11.0'
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
-- conda-forge/label/python_rc,conda-forge
-- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '17'
+- '18'
 libhwloc:
 - 2.11.1
 macos_machine:
@@ -36,6 +34,3 @@ target_platform:
 - osx-arm64
 tbb:
 - '2021'
-zip_keys:
-- - python
-  - channel_sources
