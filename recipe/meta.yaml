@@ -123,6 +123,7 @@ outputs:
     test:
       requires:
         - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
         - ninja  # [win]
         - make   # [not win]
         - cmake
