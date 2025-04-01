@@ -1,4 +1,4 @@
-{% set version = "2022.0.0" %}
+{% set version = "2022.1.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -41,9 +41,7 @@ package:
 
 source:
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
-  sha256: e8e89c9c345415b17b30a2db3095ba9d47647611662073f7fbf54ad48b7f3c2a
-  patches:
-    - patches/0010-fix-build-gcc-13.3.patch
+  sha256: ed067603ece0dc832d2881ba5c516625ac2522c665d95f767ef6304e34f961b5
 
 build:
   number: 0
