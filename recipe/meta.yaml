@@ -42,8 +42,6 @@ package:
 source:
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
   sha256: ed067603ece0dc832d2881ba5c516625ac2522c665d95f767ef6304e34f961b5
-  patches:
-    - patches/0010-fix-build-gcc-13.3.patch
 
 build:
   number: 0
