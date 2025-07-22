@@ -1,4 +1,4 @@
-{% set version = "2022.1.0" %}
+{% set version = "2022.2.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -41,10 +41,10 @@ package:
 
 source:
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
-  sha256: ed067603ece0dc832d2881ba5c516625ac2522c665d95f767ef6304e34f961b5
+  sha256: f0f78001c8c8edb4bddc3d4c5ee7428d56ae313254158ad1eec49eced57f6a5b
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
