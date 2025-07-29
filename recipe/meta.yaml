@@ -126,6 +126,7 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
         - ninja  # [win]
+        - winpthreads-devel  # [win]
         - make   # [not win]
         - cmake
         - pkg-config
