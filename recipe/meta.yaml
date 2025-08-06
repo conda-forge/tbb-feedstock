@@ -45,15 +45,16 @@ source:
   sha256: 3ad5dd08954b39d113dc5b3f8a8dc6dc1fd5250032b7c491eb07aed5c94133e1
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
     - python *
     - {{ compiler('cxx') }}
     - {{ stdlib("c") }}
-    - ninja       # [win]
-    - make        # [not win]
+    - ninja                # [win]
+    - winpthreads-devel    # [win]
+    - make                 # [not win]
     - cmake
     - pkg-config
   host:
@@ -112,8 +113,9 @@ outputs:
         - python *
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
-        - ninja  # [win]
-        - make   # [not win]
+        - ninja                # [win]
+        - winpthreads-devel    # [win]
+        - make                 # [not win]
         - cmake >=3.13
         - pkg-config
       host:
@@ -124,8 +126,9 @@ outputs:
       requires:
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
-        - ninja  # [win]
-        - make   # [not win]
+        - ninja                # [win]
+        - winpthreads-devel    # [win]
+        - make                 # [not win]
         - cmake
         - pkg-config
         - libhwloc
