@@ -52,8 +52,9 @@ requirements:
     - python *
     - {{ compiler('cxx') }}
     - {{ stdlib("c") }}
-    - ninja       # [win]
-    - make        # [not win]
+    - ninja                # [win]
+    - winpthreads-devel    # [win]
+    - make                 # [not win]
     - cmake
     - pkg-config
   host:
@@ -112,8 +113,9 @@ outputs:
         - python *
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
-        - ninja  # [win]
-        - make   # [not win]
+        - ninja                # [win]
+        - winpthreads-devel    # [win]
+        - make                 # [not win]
         - cmake >=3.13
         - pkg-config
       host:
@@ -124,8 +126,9 @@ outputs:
       requires:
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
-        - ninja  # [win]
-        - make   # [not win]
+        - ninja                # [win]
+        - winpthreads-devel    # [win]
+        - make                 # [not win]
         - cmake
         - pkg-config
         - libhwloc
