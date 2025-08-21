@@ -8,6 +8,10 @@ cdt_name:
 - conda
 channel_sources:
 - conda-forge
+- conda-forge
+- conda-forge
+- conda-forge
+- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -27,8 +31,11 @@ python:
 - 3.11.* *_cpython
 - 3.12.* *_cpython
 - 3.13.* *_cp313
-- 3.9.* *_cpython
+- 3.14.* *_cp314
 target_platform:
 - linux-ppc64le
 tbb:
 - '2021'
+zip_keys:
+- - python
+  - channel_sources
