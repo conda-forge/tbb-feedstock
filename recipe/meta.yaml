@@ -42,8 +42,6 @@ package:
 source:
   url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
   sha256: 01598a46c1162c27253a0de0236f520fd8ee8166e9ebb84a4243574f88e6e50a
-  patches:
-    - patches/fcf-protection-error.patch
 
 build:
   number: 0
