@@ -1,13 +1,9 @@
 ace:
-- 8.0.4
+- 8.0.5
 c_stdlib:
 - vs
 channel_sources:
 - conda-forge
-- conda-forge
-- conda-forge
-- conda-forge
-- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -24,10 +20,8 @@ python:
 - 3.12.* *_cpython
 - 3.13.* *_cp313
 - 3.14.* *_cp314
+- 3.14.* *_cp314t
 target_platform:
 - win-64
 tbb:
 - '2021'
-zip_keys:
-- - python
-  - channel_sources
