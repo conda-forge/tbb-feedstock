@@ -180,6 +180,8 @@ outputs:
         - swig
       host:
         - python
+        - pip
+        - setuptools
         - {{ pin_subpackage('tbb-devel', exact=True) }}
       run:
         - tbb >={{ version }}                            # while python module works with any compatible tbb...
