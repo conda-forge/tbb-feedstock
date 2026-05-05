@@ -44,7 +44,7 @@ source:
   sha256: f8767b971ec6aea25dde58ae0f593e94e7aa75a739a86f67967012f69e2199b1
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -57,7 +57,7 @@ requirements:
     - cmake
     - pkg-config
   host:
-    - libhwloc >=2.5
+    - libhwloc
 
 outputs:
   - name: tbb
@@ -77,7 +77,7 @@ outputs:
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
     requirements:
       host:
-        - libhwloc >=2.5
+        - libhwloc
     test:
       requires:
         # any python version is ok for sake of testing of shared libraries
