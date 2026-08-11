@@ -32,4 +32,4 @@ python:
 target_platform:
 - osx-arm64
 tbb:
-- '2022'
+- '2023'
