@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '19'
+- '21'
 libhwloc:
 - 2.13.0
 macos_machine:
@@ -32,4 +32,4 @@ python:
 target_platform:
 - osx-64
 tbb:
-- '2022'
+- '2023'
