@@ -1,0 +1,29 @@
+From 1f0c56f2e498c2d58141a8893fcb7a0c23c5f262 Mon Sep 17 00:00:00 2001
+From: "H. Vetinari" <h.vetinari@gmx.com>
+Date: Sat, 5 Sep 2026 22:56:44 +1100
+Subject: [PATCH] disable windows path hack that's wrong for conda
+
+---
+ python/tbb/__init__.py | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/python/tbb/__init__.py b/python/tbb/__init__.py
+index f09c93aa..5dc748ea 100644
+--- a/python/tbb/__init__.py
++++ b/python/tbb/__init__.py
+@@ -20,15 +20,6 @@ import os
+ 
+ import platform
+ 
+-if "Windows" in platform.system():
+-    import site
+-    path_to_env = site.getsitepackages()[0]
+-    path_to_libs = os.path.join(path_to_env, "Library", "bin")
+-    if sys.version_info.minor >= 8:
+-        os.add_dll_directory(path_to_libs)
+-    os.environ['PATH'] += os.pathsep + path_to_libs
+-
+-
+ from .api import  *
+ from .api import __all__ as api__all
+ from .pool import *
