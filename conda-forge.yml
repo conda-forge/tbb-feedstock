@@ -1,8 +1,6 @@
 bot:
   abi_migration_branches:
   - '2021.13'
-build_platform:
-  linux_ppc64le: linux_64
 conda_build:
   pkg_format: '2'
 conda_forge_output_validation: true
@@ -11,5 +9,7 @@ github:
   tooling_branch_name: main
 provider:
   linux_aarch64: default
+  # fails in cross-compilation
+  linux_ppc64le: azure
   osx_arm64: default
 test: native_and_emulated
