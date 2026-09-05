@@ -204,7 +204,7 @@ about:
     - LICENSE.txt
     - third-party-programs.txt
   summary: High level abstract threading library
-  dev_url: https://github.com/oneapi-src/oneTBB
+  dev_url: https://github.com/uxlfoundation/oneTBB
   doc_url: https://software.intel.com/en-us/oneapi-tbb-documentation
 
 extra:

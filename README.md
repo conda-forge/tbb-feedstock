@@ -13,7 +13,7 @@ Package license: Apache-2.0
 
 Summary: TBB Libraries
 
-Development: https://github.com/oneapi-src/oneTBB
+Development: https://github.com/uxlfoundation/oneTBB
 
 Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
 
