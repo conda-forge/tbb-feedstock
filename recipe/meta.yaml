@@ -71,6 +71,8 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
@@ -97,6 +99,8 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
@@ -140,6 +144,8 @@ outputs:
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         # Setting TBB_DIR=ON and TBB_FIND_PACKAGE=ON is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
@@ -157,6 +163,8 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - cmake {{ cmake_tbb4py_args }} -DPython3_EXECUTABLE=$PYTHON -DPython3_ROOT_DIR=$PREFIX -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [not win]
         - cmake {{ cmake_tbb4py_args }} -DPython3_EXECUTABLE=%PYTHON% -DPython3_ROOT_DIR=%PREFIX% -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [win]
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
