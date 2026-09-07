@@ -139,7 +139,7 @@ outputs:
         - integration  # same
         - src      # some tests depend on files from src
       commands:
-        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR=Ninja  # [win]
         # Setting TBB_DIR=ON and TBB_FIND_PACKAGE=ON is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
@@ -156,9 +156,9 @@ outputs:
         - third-party-programs.txt
     build:
       script:
-        - set CMAKE_GENERATOR=Ninja      # [win]
-        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=$PREFIX -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }} # [not win]
-        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=%PREFIX% -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }} # [not win]
+        - set CMAKE_GENERATOR=Ninja  # [win]
+        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=$PREFIX -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [not win]
+        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=%PREFIX% -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [not win]
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
     requirements:
