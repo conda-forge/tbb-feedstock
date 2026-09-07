@@ -56,7 +56,7 @@ requirements:
     - ninja                # [win]
     - winpthreads-devel    # [win]
     - make                 # [not win]
-    - libxml2
+    - libxml2-devel
     - cmake
     - pkg-config
   host:
@@ -124,7 +124,7 @@ outputs:
         - ninja                # [win]
         - winpthreads-devel    # [win]
         - make                 # [not win] 
-        - libxml2
+        - libxml2-devel
         - cmake >=3.13
         - pkg-config
       host:
@@ -138,7 +138,7 @@ outputs:
         - ninja                # [win]
         - winpthreads-devel    # [win]
         - make                 # [not win]
-        - libxml2
+        - libxml2-devel
         - cmake
         - pkg-config
         - libhwloc
