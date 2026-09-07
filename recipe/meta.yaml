@@ -17,17 +17,17 @@
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
 {% if win %}
-    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
-    {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX%" %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
+    {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
 {% else %}
-    {% set cmake_args = "$CMAKE_ARGS" %}
-    {% set cmake_tbb4py_args = "$CMAKE_ARGS" %}
+    {% set cmake_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
+    {% set cmake_tbb4py_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
 {% endif %}
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
 # Execution of all tests is too heavy task for packaging CI.
 # test_malloc_compliance is temporary excluded from the list since it causes failures that likely appear due to test implementation or env misconfiguration.
-# oneTBB issue: https://github.com/oneapi-src/oneTBB/issues/700
+# oneTBB issue: https://github.com/uxlfoundation/oneTBB/issues/700
 # Agreed with oneTBB developers that it is suitable approach since the product is fully tested on oneTBB side.
 {% set tests = "test_parallel_for test_tbb_header conformance_version test_flow_graph test_arena_constraints" %}
 {% set ctest_regex = "^(%s)$" % (tests.replace(' ', '|')) %}
@@ -40,7 +40,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
+  url: https://github.com/uxlfoundation/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
   sha256: 191288b52e1e6b17198000b64d77d194bb65e791be46ebc606e9b091781e2070
   patches:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
@@ -71,9 +71,6 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
-        # unset option that ninja complains about
-        - set CMAKE_GENERATOR_TOOLSET=   # [win]
-        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
@@ -100,8 +97,6 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
-        - set CMAKE_GENERATOR_TOOLSET=   # [win]
-        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
@@ -145,8 +140,6 @@ outputs:
         - src      # some tests depend on files from src
       commands:
         - set CMAKE_GENERATOR=Ninja      # [win]
-        - set CMAKE_GENERATOR_TOOLSET=   # [win]
-        - set CMAKE_GENERATOR_PLATFORM=  # [win]
         # Setting TBB_DIR=ON and TBB_FIND_PACKAGE=ON is needed to use libraries from the tested package,
         # but do not build them from sources; real path to TBBConfig files is not required,
         # because CMake will successfully find installed tested package.
@@ -164,9 +157,8 @@ outputs:
     build:
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
-        - set CMAKE_GENERATOR_TOOLSET=   # [win]
-        - set CMAKE_GENERATOR_PLATFORM=  # [win]
-        - cmake {{ cmake_tbb4py_args }} -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}
+        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=$PREFIX -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }} # [not win]
+        - cmake {{ cmake_tbb4py_args }} -DPython3_ROOT_DIR=%PREFIX% -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }} # [not win]
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
         - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
     requirements:
@@ -200,7 +192,7 @@ outputs:
         - python -m tbb test
 
 about:
-  home: https://github.com/oneapi-src/oneTBB
+  home: https://github.com/uxlfoundation/oneTBB
   license: Apache-2.0
   license_file:
     - LICENSE.txt
