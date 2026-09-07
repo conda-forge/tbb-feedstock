@@ -73,6 +73,7 @@ outputs:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - pkg-config --debug hwloc
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
