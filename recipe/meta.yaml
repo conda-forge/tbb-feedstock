@@ -54,9 +54,7 @@ requirements:
     - {{ compiler('cxx') }}
     - {{ stdlib("c") }}
     - ninja                # [win]
-    - winpthreads-devel    # [win]
     - make                 # [not win]
-    - libxml2-devel        # [not win]
     - cmake
     - pkg-config
   host:
