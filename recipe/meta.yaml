@@ -72,14 +72,17 @@ outputs:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
-        - pkg-config --print-errors --exists --debug hwloc
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
       ignore_run_exports:
         # These libraries are only required for pkg_search_module to work correctly
         - winpthreads-devel    # [win]
-        - libxml2*       # [not win]
+        - winpthreads          # [win]
+        - libwinpthread        # [win]
+        - libxml2              # [not win]
+        - libxml2-16           # [not win]
+        - libxml2-devel        # [not win]
     requirements:
       host:
         - libhwloc
