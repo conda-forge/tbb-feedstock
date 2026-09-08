@@ -79,7 +79,7 @@ outputs:
       ignore_run_exports:
         # These libraries are only required for pkg_search_module to work correctly
         - winpthreads-devel    # [win]
-        - libxml2-devel        # [not win]
+        - libxml2*       # [not win]
     requirements:
       host:
         - libhwloc
