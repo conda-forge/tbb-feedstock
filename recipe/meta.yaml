@@ -76,6 +76,10 @@ outputs:
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
         - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+      ignore_run_exports:
+        # These libraries are only required for pkg_search_module to work correctly
+        - winpthreads-devel    # [win]
+        - libxml2-devel        # [not win]
     requirements:
       host:
         - libhwloc
