@@ -56,7 +56,7 @@ requirements:
     - ninja                # [win]
     - winpthreads-devel    # [win]
     - make                 # [not win]
-    - libxml2-devel
+    - libxml2-devel        # [not win]
     - cmake
     - pkg-config
   host:
@@ -81,6 +81,8 @@ outputs:
     requirements:
       host:
         - libhwloc
+        - winpthreads-devel    # [win]
+        - libxml2-devel        # [not win]
     test:
       requires:
         # any python version is ok for sake of testing of shared libraries
@@ -116,13 +118,13 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ stdlib("c") }}
         - ninja                # [win]
-        - winpthreads-devel    # [win]
         - make                 # [not win] 
-        - libxml2-devel
         - cmake >=3.13
         - pkg-config
       host:
         - libhwloc
+        - winpthreads-devel    # [win]
+        - libxml2-devel        # [not win]
       run:
         - {{ pin_subpackage('tbb', exact=True) }}        # development package is for specific version of tbb
     test:
@@ -132,7 +134,7 @@ outputs:
         - ninja                # [win]
         - winpthreads-devel    # [win]
         - make                 # [not win]
-        - libxml2-devel
+        - libxml2-devel        # [not win]
         - cmake
         - pkg-config
         - libhwloc
