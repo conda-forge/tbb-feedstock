@@ -21,6 +21,10 @@ cxx_compiler_version:
 - '21'
 libhwloc:
 - 2.13.0
+libxml2:
+- '2.15'
+libxml2_devel:
+- '2.15'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 pin_run_as_build:
