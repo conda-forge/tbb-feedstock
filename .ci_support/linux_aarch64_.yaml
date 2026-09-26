@@ -18,7 +18,11 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64:alma10
 libhwloc:
-- 2.13.0
+- 2.15.0
+libxml2:
+- '2.15'
+libxml2_devel:
+- '2.15'
 pin_run_as_build:
   python:
     min_pin: x.x
