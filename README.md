@@ -7,7 +7,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/b
 About tbb
 ---------
 
-Home: https://github.com/oneapi-src/oneTBB
+Home: https://github.com/uxlfoundation/oneTBB
 
 Package license: Apache-2.0
 

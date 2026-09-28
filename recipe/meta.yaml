@@ -46,7 +46,7 @@ source:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
