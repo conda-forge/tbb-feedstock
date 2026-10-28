@@ -1,4 +1,4 @@
-{% set version = "2023.1.0" %}
+{% set version = "2023.2.0" %}
 
 {% set vmajor = version.split('.')[0]|int %}
 {% set vminor = version.split('.')[1]|int %}
@@ -41,12 +41,12 @@ package:
 
 source:
   url: https://github.com/uxlfoundation/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
-  sha256: 191288b52e1e6b17198000b64d77d194bb65e791be46ebc606e9b091781e2070
+  sha256: 80cb62e62defeee67ea1885a6f72d97ac81404f8fde9cded62fb51524808a30c
   patches:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
