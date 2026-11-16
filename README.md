@@ -1,21 +1,30 @@
-About tbb-feedstock
-===================
+About onetbb-feedstock
+======================
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/blob/main/LICENSE.txt)
 
 
-About tbb
----------
+About onetbb
+------------
 
 Home: https://github.com/uxlfoundation/oneTBB
 
 Package license: Apache-2.0
 
-Summary: TBB Libraries
+Summary: High level abstract threading library
 
 Development: https://github.com/uxlfoundation/oneTBB
 
 Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
+
+About tbb
+---------
+
+
+
+Package license: 
+
+Summary: TBB Libraries
 
 About tbb-devel
 ---------------
@@ -34,6 +43,24 @@ About tbb4py
 Package license: 
 
 Summary: TBB module for Python
+
+About tcm
+---------
+
+
+
+Package license: 
+
+Summary: Thread Composability Manager (TCM)
+
+About tcm-devel
+---------------
+
+
+
+Package license: 
+
+Summary: Thread Composability Manager (TCM)
 
 Current build status
 ====================
@@ -96,11 +123,13 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb-green.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb--devel-green.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb4py-green.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-tcm-green.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-tcm--devel-green.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) |
 
-Installing tbb
-==============
+Installing onetbb
+=================
 
-Installing `tbb` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `onetbb` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
 conda config --add channels conda-forge
@@ -114,7 +143,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install tbb tbb-devel tbb4py
+conda install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
@@ -123,7 +152,7 @@ conda install tbb tbb-devel tbb4py
 <summary>With mamba</summary>
 
 ```
-mamba install tbb tbb-devel tbb4py
+mamba install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
@@ -133,9 +162,9 @@ mamba install tbb tbb-devel tbb4py
 
 ```
 # for adding to your local project
-pixi add tbb tbb-devel tbb4py
+pixi add tbb tbb-devel tbb4py tcm tcm-devel
 # for installing globally
-pixi global install tbb tbb-devel tbb4py
+pixi global install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
@@ -229,17 +258,17 @@ Terminology
                   produce the finished article (built conda distributions)
 
 
-Updating tbb-feedstock
-======================
+Updating onetbb-feedstock
+=========================
 
-If you would like to improve the tbb recipe or build a new
+If you would like to improve the onetbb recipe or build a new
 package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `conda-forge` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `conda-forge` channel.
-Note that all branches in the conda-forge/tbb-feedstock are
+Note that all branches in the conda-forge/onetbb-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks, and branches in the main repository should only be used to
 build distinct package versions.

@@ -168,7 +168,7 @@ outputs:
         - ninja                # [win]
         - make                 # [not win] 
         - cmake >=3.13
-        - pkg-config
+        - pkgconf
       host:
         - libhwloc
         - winpthreads-devel    # [win]
@@ -219,7 +219,7 @@ outputs:
         - ninja                # [win]
         - make                 # [not win] 
         - cmake >=3.13
-        - pkg-config
+        - pkgconf
       host:
         - libhwloc
         - winpthreads-devel    # [win]
@@ -235,7 +235,7 @@ outputs:
         - make                 # [not win]
         - libxml2-devel        # [not win]
         - cmake
-        - pkg-config
+        - pkgconf
         - libhwloc
         # When cross-compiling we need to get uname from coreutils so that
         # CMAKE_SYSTEM_PROCESSOR is set to the correct value
