@@ -40,6 +40,7 @@ source:
   patches:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
     - patches/0002-tcm-install-rules.patch
+    - patches/0003-tbb-process-shutdown.patch
 
 build:
   number: 0
@@ -49,6 +50,7 @@ outputs:
     version: {{ tcm_version }}
     about:
       summary: Thread Composability Manager (TCM)
+      license: Apache-2.0 WITH LLVM-exception
       license_file:
         - thread_composability_manager/licensing/LICENSE.txt
         - thread_composability_manager/licensing/third-party-programs.txt
@@ -84,6 +86,7 @@ outputs:
     version: {{ tcm_version }}
     about:
       summary: Thread Composability Manager (TCM)
+      license: Apache-2.0 WITH LLVM-exception
       license_file:
         - thread_composability_manager/licensing/LICENSE.txt
         - thread_composability_manager/licensing/third-party-programs.txt
@@ -143,6 +146,7 @@ outputs:
   - name: tbb
     about:
       summary: TBB Libraries
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -192,6 +196,7 @@ outputs:
   - name: tbb-devel
     about:
       summary: TBB Development files
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -264,6 +269,7 @@ outputs:
   - name: tbb4py
     about:
       summary: TBB module for Python
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -314,9 +320,10 @@ about:
     - third-party-programs.txt
   summary: High level abstract threading library
   dev_url: https://github.com/uxlfoundation/oneTBB
-  doc_url: https://software.intel.com/en-us/oneapi-tbb-documentation
+  doc_url: https://uxlfoundation.github.io/oneTBB/
 
 extra:
+  feedstock-name: tbb
   recipe-maintainers:
     - anton-malakhov
     - jschueller
