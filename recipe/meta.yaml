@@ -53,6 +53,7 @@ outputs:
         - thread_composability_manager/licensing/LICENSE.txt
         - thread_composability_manager/licensing/third-party-programs.txt
     build:
+      skip: true  # [osx]
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
@@ -87,6 +88,7 @@ outputs:
         - thread_composability_manager/licensing/LICENSE.txt
         - thread_composability_manager/licensing/third-party-programs.txt
     build:
+      skip: true  # [osx]
       script:
         - set CMAKE_GENERATOR=Ninja      # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
@@ -113,7 +115,7 @@ outputs:
         - winpthreads-devel    # [win]
         - libxml2-devel        # [not win]
       run:
-        - {{ pin_subpackage('tcm', exact=True) }} 
+        - {{ pin_subpackage('tcm', exact=True) }}  # [not osx]
     test:
       requires:
         - {{ compiler('cxx') }}
@@ -175,7 +177,7 @@ outputs:
         - libxml2-devel        # [not win]
       run:
         # oneTBB loads TCM dynamically at run time
-        - {{ pin_subpackage('tcm', exact=True) }}
+        - {{ pin_subpackage('tcm', exact=True) }}  # [not osx]
     test:
       requires:
         # any python version is ok for sake of testing of shared libraries
