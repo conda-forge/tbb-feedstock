@@ -75,7 +75,7 @@ outputs:
         - make                 # [not win]
         - cmake
       host:
-        - libhwloc >=2.5
+        - libhwloc
         - winpthreads-devel    # [win]
         - libxml2-devel        # [not win]
 
@@ -109,7 +109,7 @@ outputs:
         - make                 # [not win]
         - cmake
       host:
-        - libhwloc >=2.5
+        - libhwloc
         - winpthreads-devel    # [win]
         - libxml2-devel        # [not win]
       run:
