@@ -1,27 +1,22 @@
-{% set version = "2023.1.0" %}
-
-{% set vmajor = version.split('.')[0]|int %}
-{% set vminor = version.split('.')[1]|int %}
-{% set vpatch = version.split('.')[2]|int %}
-{% set vbinary = vmajor - 2009 %}
+{% set version = "2023.2.0" %}
+{% set tcm_version = "1.6.0" %}
 
 {% set vtag = "v" ~ version.replace(".rc", "-rc") %}
-
-# Official patch version for the first release of 2021 is 1,
-# but internal patch version is 0, handle it for interface version.
-{% set vinterface = "%d" % (vbinary * 1000 + vminor * 10 + (vpatch if vmajor != 2021 or vminor != 1 else 0)) %}
 
 # Libraries on Windows are expected to be installed into LIBRARY_PREFIX.
 # tbb4py files should be installed into PREFIX.
 # See https://docs.conda.io/projects/conda-build/en/latest/user-guide/environment-variables.html.
 # On non-Windows CMAKE_ARGS already contains CMAKE_INSTALL_PREFIX.
 # CMAKE_PREFIX_PATH is needed to discover libhwloc with PkgConfig.
+# TCM is built as a separate output (tcm), so it is disabled for the TBB outputs.
 {% if win %}
-    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
-    {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
+    {% set cmake_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF -DTCM_BUILD=OFF" %}
+    {% set cmake_tcm_args = "%CMAKE_ARGS% -DTCM_GENERATE_VARS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX%" %}
+    {% set cmake_tbb4py_args = "%CMAKE_ARGS% -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%PREFIX% -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF -DTCM_BUILD=OFF" %}
 {% else %}
-    {% set cmake_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
-    {% set cmake_tbb4py_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF" %}
+    {% set cmake_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF -DTCM_BUILD=OFF" %}
+    {% set cmake_tcm_args = "$CMAKE_ARGS -DTCM_GENERATE_VARS=OFF" %}
+    {% set cmake_tbb4py_args = "$CMAKE_ARGS -DTBB_DISABLE_HWLOC_AUTOMATIC_SEARCH=OFF -DTCM_BUILD=OFF" %}
 {% endif %}
 
 # Use specific test list agreed with TBB team to cover core functionality on high level.
@@ -36,34 +31,123 @@
 {% set tbb4py_build_dir = "build_%PKG_HASH%" %}  # [win]
 
 package:
-  name: tbb
+  name: onetbb
   version: {{ version }}
 
 source:
   url: https://github.com/uxlfoundation/oneTBB/archive/refs/tags/{{ vtag }}.tar.gz
-  sha256: 191288b52e1e6b17198000b64d77d194bb65e791be46ebc606e9b091781e2070
+  sha256: 80cb62e62defeee67ea1885a6f72d97ac81404f8fde9cded62fb51524808a30c
   patches:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
+    - patches/0002-tcm-install-rules.patch
+    - patches/0003-tbb-process-shutdown.patch
+    - patches/0004-tcm-fix-test-rb.patch
 
 build:
-  number: 4
-
-requirements:
-  build:
-    - python *
-    - {{ compiler('cxx') }}
-    - {{ stdlib("c") }}
-    - ninja                # [win]
-    - make                 # [not win]
-    - cmake
-    - pkgconf
-  host:
-    - libhwloc
+  number: 0
 
 outputs:
+  - name: tcm
+    version: {{ tcm_version }}
+    about:
+      summary: Thread Composability Manager (TCM)
+      license: Apache-2.0 WITH LLVM-exception
+      license_file:
+        - thread_composability_manager/licensing/LICENSE.txt
+        - thread_composability_manager/licensing/third-party-programs.txt
+    build:
+      skip: true  # [osx]
+      script:
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win].
+        - cmake {{ cmake_tcm_args }} -DTCM_TEST=OFF -S thread_composability_manager -B build_tcm
+        - cmake --build build_tcm --parallel
+        - cmake --install build_tcm --component runtime
+      ignore_run_exports:
+        - winpthreads-devel    # [win]
+        - winpthreads          # [win]
+        - libwinpthread        # [win]
+        - libxml2              # [not win]
+        - libxml2-16           # [not win]
+        - libxml2-devel        # [not win]
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
+        - ninja                # [win]
+        - make                 # [not win]
+        - cmake
+      host:
+        - libhwloc
+        - winpthreads-devel    # [win]
+        - libxml2-devel        # [not win]
+
+  - name: tcm-devel
+    version: {{ tcm_version }}
+    about:
+      summary: Thread Composability Manager (TCM)
+      license: Apache-2.0 WITH LLVM-exception
+      license_file:
+        - thread_composability_manager/licensing/LICENSE.txt
+        - thread_composability_manager/licensing/third-party-programs.txt
+    build:
+      skip: true  # [osx]
+      script:
+        - set CMAKE_GENERATOR=Ninja      # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win].
+        - cmake {{ cmake_tcm_args }} -DTCM_TEST=OFF -S thread_composability_manager -B build_tcm
+        - cmake --build build_tcm --parallel
+        - cmake --install build_tcm --component devel
+      ignore_run_exports:
+        - winpthreads-devel    # [win]
+        - winpthreads          # [win]
+        - libwinpthread        # [win]
+        - libxml2              # [not win]
+        - libxml2-16           # [not win]
+        - libxml2-devel        # [not win]
+    requirements:
+      build:
+        - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
+        - ninja                # [win]
+        - make                 # [not win]
+        - cmake
+      host:
+        - libhwloc
+        - winpthreads-devel    # [win]
+        - libxml2-devel        # [not win]
+      run:
+        - {{ pin_subpackage('tcm', exact=True) }}  # [not osx]
+    test:
+      requires:
+        - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
+        - ninja                # [win]
+        - winpthreads-devel    # [win]
+        - make                 # [not win]
+        - libxml2-devel        # [not win]
+        - cmake
+        - libhwloc
+        # When cross-compiling we need to get uname from coreutils so that
+        # CMAKE_SYSTEM_PROCESSOR is set to the correct value
+        - coreutils  # [build_platform != target_platform]
+      source_files:
+        - thread_composability_manager
+      commands:
+        - set CMAKE_GENERATOR=Ninja  # [win]
+        - set CMAKE_GENERATOR_PLATFORM=  # [win]
+        - set CMAKE_GENERATOR_TOOLSET=   # [win]
+        - cmake {{ cmake_tcm_args }} -DTCM_TEST=ON -DTCM_DIR=ON -S thread_composability_manager -B tcm_test_build
+        - cmake --build tcm_test_build --parallel  # build tests
+        - cd tcm_test_build
+        - ctest --output-on-failure
+
   - name: tbb
     about:
       summary: TBB Libraries
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -74,7 +158,7 @@ outputs:
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
-        - cmake -DCOMPONENT=runtime -P build/cmake_install.cmake
+        - cmake --install build --component runtime
       ignore_run_exports:
         # These libraries are only required for pkg_search_module to work correctly
         - winpthreads-devel    # [win]
@@ -84,24 +168,36 @@ outputs:
         - libxml2-16           # [not win]
         - libxml2-devel        # [not win]
     requirements:
+      build:
+        - python *
+        - {{ compiler('cxx') }}
+        - {{ stdlib("c") }}
+        - ninja                # [win]
+        - make                 # [not win] 
+        - cmake >=3.13
+        - pkgconf
       host:
         - libhwloc
         - winpthreads-devel    # [win]
         - libxml2-devel        # [not win]
+      run:
+        # oneTBB loads TCM dynamically at run time
+        - {{ pin_subpackage('tcm', exact=True) }}  # [not osx]
     test:
       requires:
         # any python version is ok for sake of testing of shared libraries
         - python *
       commands:
-        {% set libname = "libtbb.so." ~ vbinary ~ "." ~ vminor %}          # [linux]
-        {% set libname = "libtbb." ~ vbinary ~ "." ~ vminor ~ ".dylib" %}  # [osx]
-        {% set libname = "tbb" ~ vbinary ~ ".dll" %}                       # [win]
+        {% set libname = "libtbb.so.12" %}      # [linux]
+        {% set libname = "libtbb.12.dylib" %}   # [osx]
+        {% set libname = "tbb12.dll" %}         # [win]
         {% set win_extra = "os.add_dll_directory(os.environ['LIBRARY_BIN']); " if win else "" %}
-        - python -c "import ctypes, os; {{ win_extra }} assert {{ vinterface }} == ctypes.cdll[r'{{ libname }}']['TBB_runtime_interface_version']()"
+        - python -c "import ctypes, os; {{ win_extra }} f = ctypes.cdll['{{ libname }}'].TBB_runtime_version; f.restype = ctypes.c_char_p; v = f().decode(); print(v); assert '{{ version }}' in v"
 
   - name: tbb-devel
     about:
       summary: TBB Development files
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -112,11 +208,17 @@ outputs:
         - set CMAKE_GENERATOR_TOOLSET=   # [win]
         - cmake {{ cmake_args }} -DTBB_TEST=OFF -S . -B build
         - cmake --build build --parallel
-        - cmake -DCOMPONENT=devel -P build/cmake_install.cmake
+        - cmake --install build --component devel
       run_exports:
         - tbb >={{ version }}
       ignore_run_exports:
-        - libhwloc
+        # These libraries are only required for pkg_search_module to work correctly
+        - winpthreads-devel    # [win]
+        - winpthreads          # [win]
+        - libwinpthread        # [win]
+        - libxml2              # [not win]
+        - libxml2-16           # [not win]
+        - libxml2-devel        # [not win]
     requirements:
       build:
         - python *
@@ -168,6 +270,7 @@ outputs:
   - name: tbb4py
     about:
       summary: TBB module for Python
+      license: Apache-2.0
       license_file:
         - LICENSE.txt
         - third-party-programs.txt
@@ -179,7 +282,7 @@ outputs:
         - cmake {{ cmake_tbb4py_args }} -DPython3_EXECUTABLE=$PYTHON -DPython3_ROOT_DIR=$PREFIX -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [not win]
         - cmake {{ cmake_tbb4py_args }} -DPython3_EXECUTABLE=%PYTHON% -DPython3_ROOT_DIR=%PREFIX% -DTBB4PY_BUILD=ON -DTBB_TEST=OFF -S . -B {{ tbb4py_build_dir }}  # [win]
         - cmake --build {{ tbb4py_build_dir }} --target python_build --parallel
-        - cmake -DCOMPONENT=tbb4py -P {{ tbb4py_build_dir }}/cmake_install.cmake
+        - cmake --install {{ tbb4py_build_dir }} --component tbb4py
     requirements:
       build:
         - python                                 # [build_platform != target_platform]
@@ -218,9 +321,10 @@ about:
     - third-party-programs.txt
   summary: High level abstract threading library
   dev_url: https://github.com/uxlfoundation/oneTBB
-  doc_url: https://software.intel.com/en-us/oneapi-tbb-documentation
+  doc_url: https://uxlfoundation.github.io/oneTBB/
 
 extra:
+  feedstock-name: tbb
   recipe-maintainers:
     - anton-malakhov
     - jschueller

@@ -1,0 +1,100 @@
+From dcf934613166b22e8094f89f5f3badc06cc28b25 Mon Sep 17 00:00:00 2001
+From: "Isaev, Ilya" <ilya.isaev@intel.com>
+Date: Fri, 13 Nov 2026 10:26:57 +0100
+Subject: [PATCH] Assign component property to libraries, headers, vars
+
+Signed-off-by: Isaev, Ilya <ilya.isaev@intel.com>
+---
+ thread_composability_manager/CMakeLists.txt     |  1 +
+ thread_composability_manager/cmake/README.md    |  1 +
+ .../cmake/vars_utils.cmake                      |  1 +
+ thread_composability_manager/src/CMakeLists.txt | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/thread_composability_manager/CMakeLists.txt b/thread_composability_manager/CMakeLists.txt
+index 0530efbf..26eb64d1 100644
+--- a/thread_composability_manager/CMakeLists.txt
++++ b/thread_composability_manager/CMakeLists.txt
+@@ -58,6 +58,7 @@ endif()
+ # Assigning options their defaults after determining whether they were specified explicitly or not
+ option(TCM_TEST "Enable testing" ON)
+ option(TCM_STRICT "Treat compiler warnings as errors" ON)
++option(TCM_GENERATE_VARS "Generate and install vars script (standalone build only)" ON)
+ option(TCM_FUZZ_TESTING "Enable FUZZ testing of TCM" OFF)
+ 
+ set(TCM_PROFILE ${TCM_PROFILE} CACHE STRING "Enable profiling of TCM functionality" FORCE)
+diff --git a/thread_composability_manager/cmake/README.md b/thread_composability_manager/cmake/README.md
+index cb70cb06..301cf546 100644
+--- a/thread_composability_manager/cmake/README.md
++++ b/thread_composability_manager/cmake/README.md
+@@ -10,6 +10,7 @@ The following project controls are available during the configure stage:
+ ```
+ TCM_TEST:BOOL - Enable testing (ON by default)
+ TCM_STRICT:BOOL - Treat compiler warnings as errors (ON by default)
++TCM_GENERATE_VARS:BOOL - Generate and install the vars script in standalone builds (ON by default)
+ TCM_PROFILE:STRING - Enable profiling of TCM functionality
+ ```
+ 
+diff --git a/thread_composability_manager/cmake/vars_utils.cmake b/thread_composability_manager/cmake/vars_utils.cmake
+index 679fe18b..f3da826e 100644
+--- a/thread_composability_manager/cmake/vars_utils.cmake
++++ b/thread_composability_manager/cmake/vars_utils.cmake
+@@ -45,5 +45,6 @@ macro(tcm_generate_vars target)
+     install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/${tcm_vars_name}_install"
+         DESTINATION env
+         RENAME "${tcm_vars_name}"
++        COMPONENT runtime
+     )
+ endmacro()
+diff --git a/thread_composability_manager/src/CMakeLists.txt b/thread_composability_manager/src/CMakeLists.txt
+index 9d3484d4..b01b0d4a 100644
+--- a/thread_composability_manager/src/CMakeLists.txt
++++ b/thread_composability_manager/src/CMakeLists.txt
+@@ -112,20 +112,32 @@ install(TARGETS tcm
+   EXPORT ${PROJECT_NAME}Targets
+   LIBRARY
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    NAMELINK_SKIP
++    COMPONENT runtime
+   RUNTIME
+     DESTINATION ${CMAKE_INSTALL_BINDIR}
++    COMPONENT runtime
+   ARCHIVE
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    COMPONENT devel
+   PUBLIC_HEADER
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++    COMPONENT devel
++)
++install(TARGETS tcm
++  LIBRARY
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    NAMELINK_ONLY
++    COMPONENT devel
+ )
+ 
+ # Define common installation rules
+-install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(DIRECTORY ../include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT devel)
+ 
+ install(EXPORT ${PROJECT_NAME}Targets
+   NAMESPACE TCM::
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++  COMPONENT devel
+ )
+ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+   "include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)\n"
+@@ -140,9 +152,10 @@ install(
+   FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++  COMPONENT devel
+ )
+ 
+ # Assume outer project generates vars properly
+-if (IS_TCM_STANDALONE)
++if (IS_TCM_STANDALONE AND TCM_GENERATE_VARS)
+   tcm_generate_vars(tcm)
+ endif()
+-- 
+2.53.0

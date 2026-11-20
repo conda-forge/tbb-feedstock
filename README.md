@@ -11,18 +11,27 @@ Home: https://github.com/uxlfoundation/oneTBB
 
 Package license: Apache-2.0
 
-Summary: TBB Libraries
+Summary: High level abstract threading library
 
 Development: https://github.com/uxlfoundation/oneTBB
 
-Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
+Documentation: https://uxlfoundation.github.io/oneTBB/
+
+About tbb
+---------
+
+
+
+Package license: Apache-2.0
+
+Summary: TBB Libraries
 
 About tbb-devel
 ---------------
 
 
 
-Package license: 
+Package license: Apache-2.0
 
 Summary: TBB Development files
 
@@ -31,9 +40,27 @@ About tbb4py
 
 
 
-Package license: 
+Package license: Apache-2.0
 
 Summary: TBB module for Python
+
+About tcm
+---------
+
+
+
+Package license: Apache-2.0 WITH LLVM-exception
+
+Summary: Thread Composability Manager (TCM)
+
+About tcm-devel
+---------------
+
+
+
+Package license: Apache-2.0 WITH LLVM-exception
+
+Summary: Thread Composability Manager (TCM)
 
 Current build status
 ====================
@@ -96,6 +123,8 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb-green.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb.svg)](https://anaconda.org/conda-forge/tbb) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb--devel-green.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb-devel.svg)](https://anaconda.org/conda-forge/tbb-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-tbb4py-green.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tbb4py.svg)](https://anaconda.org/conda-forge/tbb4py) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-tcm-green.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tcm.svg)](https://anaconda.org/conda-forge/tcm) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-tcm--devel-green.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/tcm-devel.svg)](https://anaconda.org/conda-forge/tcm-devel) |
 
 Installing tbb
 ==============
@@ -114,7 +143,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install tbb tbb-devel tbb4py
+conda install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
@@ -123,7 +152,7 @@ conda install tbb tbb-devel tbb4py
 <summary>With mamba</summary>
 
 ```
-mamba install tbb tbb-devel tbb4py
+mamba install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
@@ -133,9 +162,9 @@ mamba install tbb tbb-devel tbb4py
 
 ```
 # for adding to your local project
-pixi add tbb tbb-devel tbb4py
+pixi add tbb tbb-devel tbb4py tcm tcm-devel
 # for installing globally
-pixi global install tbb tbb-devel tbb4py
+pixi global install tbb tbb-devel tbb4py tcm tcm-devel
 ```
 
 </details>
