@@ -41,6 +41,7 @@ source:
     - patches/0001-disable-windows-path-hack-that-s-wrong-for-conda.patch
     - patches/0002-tcm-install-rules.patch
     - patches/0003-tbb-process-shutdown.patch
+    - patches/0004-tcm-fix-test-rb.patch
 
 build:
   number: 0
