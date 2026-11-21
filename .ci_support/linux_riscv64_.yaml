@@ -1,10 +1,11 @@
+DOCKER_PLATFORM:
+- linux/amd64
 c_stdlib:
 - sysroot
 c_stdlib_version:
 - '2.39'
 channel_sources:
 - conda-forge
-- conda-forge,conda-forge/label/python_rc
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -14,6 +15,6 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-x86_64:alma10
 libhwloc:
-- 2.15.0
+- 2.13.0
 target_platform:
 - linux-riscv64
