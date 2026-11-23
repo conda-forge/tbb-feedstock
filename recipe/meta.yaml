@@ -166,6 +166,7 @@ outputs:
         - LICENSE.txt
         - third-party-programs.txt
     build:
+      skip: true  # [py>=312]
       script:
         - set CMAKE_GENERATOR=Ninja  # [win]
         - set CMAKE_GENERATOR_PLATFORM=  # [win]
@@ -186,8 +187,6 @@ outputs:
         - swig
       host:
         - python
-        - pip
-        - setuptools
         - {{ pin_subpackage('tbb-devel', exact=True) }}
       run:
         - tbb >={{ version }}                            # while python module works with any compatible tbb...
