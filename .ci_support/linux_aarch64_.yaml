@@ -16,6 +16,10 @@ docker_image:
 - quay.io/condaforge/linux-anvil-aarch64:alma10
 libhwloc:
 - 2.15.0
+libxml2:
+- '2.15'
+libxml2_devel:
+- '2.15'
 pin_run_as_build:
   python:
     min_pin: x.x
@@ -27,6 +31,7 @@ python:
 - 3.14.* *_cp314
 - 3.14.* *_cp314t
 - 3.15.* *_cp315
+- 3.15.* *_cp315t
 target_platform:
 - linux-aarch64
 tbb:

@@ -7,22 +7,31 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/tbb-feedstock/b
 About tbb
 ---------
 
-Home: https://github.com/oneapi-src/oneTBB
+Home: https://github.com/uxlfoundation/oneTBB
+
+Package license: Apache-2.0
+
+Summary: High level abstract threading library
+
+Development: https://github.com/uxlfoundation/oneTBB
+
+Documentation: https://uxlfoundation.github.io/oneTBB/
+
+About tbb
+---------
+
+
 
 Package license: Apache-2.0
 
 Summary: TBB Libraries
-
-Development: https://github.com/oneapi-src/oneTBB
-
-Documentation: https://software.intel.com/en-us/oneapi-tbb-documentation
 
 About tbb-devel
 ---------------
 
 
 
-Package license: 
+Package license: Apache-2.0
 
 Summary: TBB Development files
 
@@ -31,7 +40,7 @@ About tbb4py
 
 
 
-Package license: 
+Package license: Apache-2.0
 
 Summary: TBB module for Python
 
